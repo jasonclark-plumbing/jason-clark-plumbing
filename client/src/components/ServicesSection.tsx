@@ -44,17 +44,17 @@ const SERVICES = [
   },
   {
     icon: <AlertTriangle size={22} />,
-    title: "Emergency Callouts",
+    title: "Blocked Sinks & Drains",
     description:
-      "Burst pipes, severe leaks, and plumbing emergencies require a fast response. Jason provides prompt local callouts to minimise damage and restore normality.",
+      "Stubborn blockages in sinks, baths, showers, and drains cleared quickly and efficiently. Jason uses professional techniques to restore full flow without damage to your pipework.",
     image: null,
     featured: false,
   },
   {
     icon: <Thermometer size={22} />,
-    title: "Power Flushing",
+    title: "Outside Tap Installation",
     description:
-      "Power flushing removes sludge, rust, and debris from your central heating system, restoring efficiency, improving heat output, and extending the life of your radiators.",
+      "Professional installation of outdoor taps and garden water points. Perfect for gardens, patios, and utility areas. Frost-proof fittings and proper drainage included.",
     image: null,
     featured: false,
   },
