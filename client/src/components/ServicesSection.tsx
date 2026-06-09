@@ -28,11 +28,11 @@ const SERVICES = [
   },
   {
     icon: <Flame size={22} />,
-    title: "Boiler Servicing & Repair",
+    title: "Radiator Installation & Repair",
     description:
-      "Annual boiler services, fault diagnosis, and repairs to keep your heating system running safely and efficiently throughout the year.",
-    image: "https://d2xsxph8kpxj0f.cloudfront.net/310519663746061583/JZGjRQ39WvQmto8RQcSvRP/boiler-service-JNHRxMFXdy8dmKK89tdLWf.webp",
-    featured: true,
+      "New radiator installations, replacements, bleeding, and balancing to keep your home warm and your heating system running at its best.",
+    image: null,
+    featured: false,
   },
   {
     icon: <Bath size={22} />,
@@ -52,9 +52,9 @@ const SERVICES = [
   },
   {
     icon: <Thermometer size={22} />,
-    title: "Central Heating",
+    title: "Power Flushing",
     description:
-      "Radiator installation and replacement, power flushing, TRV upgrades, and full central heating system installations for new builds and renovations.",
+      "Power flushing removes sludge, rust, and debris from your central heating system, restoring efficiency, improving heat output, and extending the life of your radiators.",
     image: null,
     featured: false,
   },
@@ -202,6 +202,7 @@ export default function ServicesSection() {
           >
             From emergency repairs to full bathroom installations, Jason Clark Plumbing
             delivers skilled, reliable work across a comprehensive range of plumbing services.
+            Please note: gas work and boiler servicing are not currently offered.
           </p>
         </div>
 

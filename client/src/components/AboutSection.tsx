@@ -79,7 +79,7 @@ export default function AboutSection() {
               style={{ border: "1px solid rgba(201,168,76,0.3)" }}
             >
               <img
-                src="https://d2xsxph8kpxj0f.cloudfront.net/310519663746061583/JZGjRQ39WvQmto8RQcSvRP/boiler-service-JNHRxMFXdy8dmKK89tdLWf.webp"
+                src="https://d2xsxph8kpxj0f.cloudfront.net/310519663746061583/JZGjRQ39WvQmto8RQcSvRP/pipe-repair-fRGhh9bjJQAPj7Lw8ajZBo.webp"
                 alt="Jason Clark at work"
                 className="w-full object-cover"
                 style={{ height: "480px" }}

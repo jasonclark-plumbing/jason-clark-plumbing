@@ -59,7 +59,8 @@ export default function Footer() {
               }}
             >
               Reliable local plumbing services. City &amp; Guilds qualified,
-              ACIPHE Associate Member. Serving Huntingdon and the surrounding area.
+              ACIPHE Associate Member. No gas work undertaken.
+              Serving Huntingdon and the surrounding area.
             </p>
             <div className="flex gap-3 mt-1">
               {[
