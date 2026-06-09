@@ -24,36 +24,11 @@ function useInView(threshold = 0.15) {
   return { ref, inView };
 }
 
-function CountUp({ target, suffix = "" }: { target: number; suffix?: string }) {
-  const [count, setCount] = useState(0);
-  const { ref, inView } = useInView(0.3);
-
-  useEffect(() => {
-    if (!inView) return;
-    let start = 0;
-    const duration = 1400;
-    const step = Math.ceil(target / (duration / 16));
-    const timer = setInterval(() => {
-      start += step;
-      if (start >= target) { setCount(target); clearInterval(timer); }
-      else setCount(start);
-    }, 16);
-    return () => clearInterval(timer);
-  }, [inView, target]);
-
-  return (
-    <span ref={ref}>
-      {count}{suffix}
-    </span>
-  );
-}
-
 const CREDENTIALS = [
   "City & Guilds Qualified",
   "ACIPHE Associate Member",
   "Fully Insured",
   "Free Quotes Available",
-  "No Call-Out Charge for Local Jobs",
 ];
 
 export default function AboutSection() {
@@ -94,47 +69,7 @@ export default function AboutSection() {
               className="absolute -bottom-4 -right-4 w-24 h-24 pointer-events-none"
               style={{ border: "1px solid rgba(201,168,76,0.25)" }}
             />
-            {/* Stats overlay */}
-            <div
-              className="absolute bottom-6 left-6 right-6 flex gap-4"
-            >
-              {[
-                { value: 15, suffix: "+", label: "Years Experience" },
-                { value: 500, suffix: "+", label: "Jobs Completed" },
-                { value: 100, suffix: "%", label: "Local & Trusted" },
-              ].map((stat) => (
-                <div
-                  key={stat.label}
-                  className="flex-1 text-center py-3 px-2"
-                  style={{ background: "rgba(12,12,12,0.85)", border: "1px solid rgba(201,168,76,0.3)" }}
-                >
-                  <div
-                    style={{
-                      fontFamily: "'Playfair Display', serif",
-                      fontSize: "1.75rem",
-                      fontWeight: 700,
-                      color: "#C9A84C",
-                      lineHeight: 1,
-                    }}
-                  >
-                    <CountUp target={stat.value} suffix={stat.suffix} />
-                  </div>
-                  <div
-                    style={{
-                      fontFamily: "'Montserrat', sans-serif",
-                      fontSize: "0.6rem",
-                      fontWeight: 600,
-                      letterSpacing: "0.12em",
-                      textTransform: "uppercase",
-                      color: "#9A8A6A",
-                      marginTop: "4px",
-                    }}
-                  >
-                    {stat.label}
-                  </div>
-                </div>
-              ))}
-            </div>
+
           </div>
 
           {/* Right: text content */}
@@ -171,10 +106,10 @@ export default function AboutSection() {
                 marginBottom: "1.25rem",
               }}
             >
-              Jason Clark is a City &amp; Guilds qualified plumber with over 15 years of
-              hands-on experience serving homeowners and businesses across the local area.
-              As an ACIPHE Associate Member, Jason upholds the highest professional standards
-              in every job — from a simple tap repair to a complete bathroom renovation.
+              Jason Clark is a City &amp; Guilds qualified plumber bringing professional,
+              reliable service to the local area. As an ACIPHE Associate Member, Jason upholds
+              the highest professional standards in every job — from a simple tap repair to a
+              complete bathroom renovation.
             </p>
             <p
               style={{
