@@ -76,7 +76,7 @@ export default function HeroSection() {
           className="section-label animate-fade-up"
           style={{ animationDelay: "80ms" }}
         >
-          — Reliable Local Plumbing —
+          — Serving Huntingdon & Surrounding Areas —
         </div>
 
         {/* Main heading */}
@@ -122,16 +122,17 @@ export default function HeroSection() {
           className="animate-fade-up"
           style={{ animationDelay: "320ms" }}
         >
-          <p
-            style={{
-              fontFamily: "'Lora', serif",
-              fontSize: "0.9375rem",
-              color: "#F0EAD6",
-              letterSpacing: "0.02em",
-            }}
-          >
-            City &amp; Guilds Qualified &nbsp;·&nbsp; ACIPHE Associate Member
-          </p>
+            <p
+              style={{
+                fontFamily: "'Lora', serif",
+                fontSize: "0.9375rem",
+                color: "#F0EAD6",
+                letterSpacing: "0.02em",
+              }}
+            >
+              City &amp; Guilds Qualified &nbsp;·&nbsp; ACIPHE Associate Member<br />
+              <span style={{ fontSize: "0.875rem", color: "#9A8A6A" }}>Huntingdon &amp; Surrounding Areas</span>
+            </p>
         </div>
 
         {/* CTA buttons */}

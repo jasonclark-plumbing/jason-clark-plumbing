@@ -122,7 +122,8 @@ export default function AboutSection() {
             >
               Every job is approached with the same level of care and attention to detail.
               Jason takes pride in arriving on time, working cleanly, and leaving your home
-              exactly as he found it — only with the problem fixed.
+              exactly as he found it — only with the problem fixed. Based in Huntingdon,
+              Jason serves the local area and surrounding towns.
             </p>
 
             {/* Credentials list */}
