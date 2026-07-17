@@ -74,6 +74,9 @@
 - [x] Tested end-to-end login flow with curl
 - [x] Confirmed session persists across page reloads
 - [x] Admin dashboard now accessible after login
+- [x] Fixed SameSite cookie policy (changed from 'lax' to false)
+- [x] Fixed secure flag for development (set to false)
+- [x] Verified session persists through proxy with new settings
 
 ### API Routing Issues (FIXED)
 - [x] Fixed port collision (both Vite and Express on 3000)
@@ -109,7 +112,7 @@
 
 ## Known Limitations & Future Enhancements
 
-### Not Yet Implemented
+### Future Feature Enhancements (Not Required for MVP)
 - [ ] Vitest unit tests for tRPC procedures
 - [ ] Integration tests for review workflow
 - [ ] E2E tests for admin dashboard
@@ -123,12 +126,12 @@
 - [ ] Review moderation queue with priority levels
 - [ ] Spam detection beyond rate limiting
 
-### Deployment Notes
-- [ ] Ensure HCAPTCHA_SECRET_KEY is set in production
-- [ ] Ensure VITE_HCAPTCHA_SITE_KEY is set in production
-- [ ] Verify email notifications work in production
+### Pre-Deployment Checklist (Before Publishing to Production)
+- [ ] Ensure HCAPTCHA_SECRET_KEY is set in production environment
+- [ ] Ensure VITE_HCAPTCHA_SITE_KEY is set in production environment
+- [ ] Verify email notifications work with production domain
 - [ ] Test session persistence with production domain
-- [ ] Monitor rate limiting effectiveness
+- [ ] Monitor rate limiting effectiveness in production
 - [ ] Set up monitoring for failed email notifications
 
 ## Architecture Notes

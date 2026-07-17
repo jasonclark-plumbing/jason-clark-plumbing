@@ -25,9 +25,9 @@ async function startServer() {
       resave: false,
       saveUninitialized: false,
       cookie: {
-        secure: process.env.NODE_ENV === "production",
+        secure: false, // Use false for development (HTTP)
         httpOnly: true,
-        sameSite: "lax",
+        sameSite: false, // Disable SameSite for development
         maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
       },
     })
