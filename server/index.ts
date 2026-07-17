@@ -33,7 +33,12 @@ async function startServer() {
     })
   );
 
-  // tRPC middleware
+  // Health check endpoint (before static files)
+  app.get("/api/health", (_req, res) => {
+    res.json({ status: "ok" });
+  });
+
+  // tRPC middleware (before static files and catch-all)
   app.use(
     "/api/trpc",
     createExpressMiddleware({
@@ -50,12 +55,7 @@ async function startServer() {
 
   app.use(express.static(staticPath));
 
-  // Health check endpoint
-  app.get("/api/health", (_req, res) => {
-    res.json({ status: "ok" });
-  });
-
-  // Handle client-side routing - serve index.html for all routes
+  // Handle client-side routing - serve index.html for all routes (MUST be last)
   app.get("*", (_req, res) => {
     res.sendFile(path.join(staticPath, "index.html"));
   });

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { testimonials } from "@/data/testimonials";
 import ReviewSubmitForm from "@/components/ReviewSubmitForm";
-import { Star } from "lucide-react";
+import { Star, ArrowLeft } from "lucide-react";
 
 interface DatabaseReview {
   id: number;
@@ -73,9 +73,24 @@ export default function Reviews() {
   ];
 
   return (
-    <div className="min-h-screen bg-black text-cream pt-20 pb-20">
+    <div className="min-h-screen bg-black text-cream pb-20">
+      {/* Navigation Bar */}
+      <nav className="bg-black border-b border-gold/20 sticky top-0 z-50">
+        <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
+          <a
+            href="/"
+            className="flex items-center gap-2 text-gold hover:text-gold/80 transition-colors"
+          >
+            <ArrowLeft size={20} />
+            <span className="font-semibold">Back to Home</span>
+          </a>
+          <h2 className="text-2xl font-playfair text-gold">Reviews</h2>
+          <div className="w-24"></div>
+        </div>
+      </nav>
+
       {/* Header */}
-      <div className="max-w-4xl mx-auto px-4 mb-16">
+      <div className="max-w-4xl mx-auto px-4 mb-16 pt-20">
         <div className="text-center">
           <h1 className="text-5xl md:text-6xl font-playfair text-gold mb-4">
             Customer Reviews
