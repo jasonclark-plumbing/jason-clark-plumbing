@@ -25,17 +25,29 @@ export default function Reviews() {
   const fetchApprovedReviews = async () => {
     try {
       setLoading(true);
-      const response = await fetch("/api/trpc/reviews.getApproved");
+      setError("");
+
+      // Call tRPC endpoint with proper format
+      const response = await fetch("/api/trpc/reviews.getApproved", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       if (!response.ok) {
-        throw new Error("Failed to fetch reviews");
+        throw new Error(`HTTP ${response.status}`);
       }
 
       const data = await response.json();
-      setApprovedReviews(data.result?.data || []);
+      
+      // tRPC returns data in result.data format
+      const reviews = data.result?.data || [];
+      setApprovedReviews(reviews);
     } catch (err) {
       console.error("Error fetching reviews:", err);
-      setError(err instanceof Error ? err.message : "Failed to load reviews");
+      // Don't show error to user - just use static testimonials
+      setError("");
     } finally {
       setLoading(false);
     }
@@ -44,7 +56,7 @@ export default function Reviews() {
   // Combine static testimonials with database reviews
   const allReviews = [
     ...testimonials.map((t) => ({
-      id: `static-${t.id}`,
+      id: `static-${t.id}` as any,
       customerName: t.name,
       customerEmail: "",
       rating: 5,
@@ -53,7 +65,7 @@ export default function Reviews() {
       submittedAt: t.date,
       isStatic: true,
     })),
-    ...approvedReviews.map((r) => ({
+    ...approvedReviews.map((r: DatabaseReview) => ({
       ...r,
       id: `db-${r.id}`,
       isStatic: false,
