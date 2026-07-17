@@ -1,7 +1,65 @@
+import { useEffect, useState } from "react";
 import { testimonials } from "@/data/testimonials";
 import ReviewSubmitForm from "@/components/ReviewSubmitForm";
+import { Star } from "lucide-react";
+
+interface DatabaseReview {
+  id: number;
+  customerName: string;
+  customerEmail: string;
+  rating: number;
+  text: string;
+  status: "pending" | "approved" | "rejected";
+  submittedAt: string;
+}
 
 export default function Reviews() {
+  const [approvedReviews, setApprovedReviews] = useState<DatabaseReview[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    fetchApprovedReviews();
+  }, []);
+
+  const fetchApprovedReviews = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch("/api/trpc/reviews.getApproved");
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch reviews");
+      }
+
+      const data = await response.json();
+      setApprovedReviews(data.result?.data || []);
+    } catch (err) {
+      console.error("Error fetching reviews:", err);
+      setError(err instanceof Error ? err.message : "Failed to load reviews");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Combine static testimonials with database reviews
+  const allReviews = [
+    ...testimonials.map((t) => ({
+      id: `static-${t.id}`,
+      customerName: t.name,
+      customerEmail: "",
+      rating: 5,
+      text: t.text,
+      status: "approved" as const,
+      submittedAt: t.date,
+      isStatic: true,
+    })),
+    ...approvedReviews.map((r) => ({
+      ...r,
+      id: `db-${r.id}`,
+      isStatic: false,
+    })),
+  ];
+
   return (
     <div className="min-h-screen bg-black text-cream pt-20 pb-20">
       {/* Header */}
@@ -19,43 +77,59 @@ export default function Reviews() {
       {/* Testimonials Grid */}
       <div className="max-w-4xl mx-auto px-4">
         <div className="space-y-6">
-          {testimonials.map((testimonial, index) => (
-            <div
-              key={testimonial.id}
-              className="border-2 border-gold/40 p-8 hover:border-gold/80 transition-colors"
-            >
-              {/* Quote Mark */}
-              <div className="text-5xl text-gold/30 mb-4 leading-none">"</div>
+          {loading ? (
+            <div className="text-center py-12">
+              <p className="text-cream/60">Loading reviews...</p>
+            </div>
+          ) : error ? (
+            <div className="text-center py-12">
+              <p className="text-red-400">{error}</p>
+            </div>
+          ) : allReviews.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-cream/60">No reviews yet. Be the first to share your experience!</p>
+            </div>
+          ) : (
+            allReviews.map((review) => (
+              <div
+                key={review.id}
+                className="border-2 border-gold/40 p-8 hover:border-gold/80 transition-colors"
+              >
+                {/* Quote Mark */}
+                <div className="text-5xl text-gold/30 mb-4 leading-none">"</div>
 
-              {/* Testimonial Text */}
-              <p className="text-lg text-cream mb-6 leading-relaxed italic">
-                {testimonial.text}
-              </p>
+                {/* Review Text */}
+                <p className="text-lg text-cream mb-6 leading-relaxed italic">
+                  {review.text}
+                </p>
 
-              {/* Customer Info */}
-              <div className="flex items-center justify-between pt-4 border-t border-gold/20">
-                <div>
-                  <p className="text-gold font-semibold">{testimonial.name}</p>
-                  <p className="text-cream/60 text-sm">
-                    {new Date(testimonial.date).toLocaleDateString("en-GB", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
-                  </p>
-                </div>
+                {/* Customer Info */}
+                <div className="flex items-center justify-between pt-4 border-t border-gold/20">
+                  <div>
+                    <p className="text-gold font-semibold">{review.customerName}</p>
+                    <p className="text-cream/60 text-sm">
+                      {new Date(review.submittedAt).toLocaleDateString("en-GB", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })}
+                    </p>
+                  </div>
 
-                {/* Star Rating */}
-                <div className="flex gap-1">
-                  {[...Array(5)].map((_, i) => (
-                    <span key={i} className="text-gold text-xl">
-                      ★
-                    </span>
-                  ))}
+                  {/* Star Rating */}
+                  <div className="flex gap-1">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <Star
+                        key={i}
+                        size={20}
+                        className={i < review.rating ? "fill-gold text-gold" : "text-gold/30"}
+                      />
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
 
         {/* Review Submission Form */}
