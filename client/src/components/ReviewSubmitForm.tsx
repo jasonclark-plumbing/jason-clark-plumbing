@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Star } from "lucide-react";
+import HCaptcha from "@hcaptcha/react-hcaptcha";
 
 export default function ReviewSubmitForm() {
   const [form, setForm] = useState({
@@ -11,6 +12,7 @@ export default function ReviewSubmitForm() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const captchaRef = useRef<HCaptcha>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -26,19 +28,31 @@ export default function ReviewSubmitForm() {
     setError("");
 
     try {
-      const response = await fetch("/api/reviews/submit", {
+      // Get CAPTCHA token
+      const captchaToken = captchaRef.current?.getResponse();
+      if (!captchaToken) {
+        throw new Error("Please complete the CAPTCHA verification");
+      }
+
+      const response = await fetch("/api/trpc/reviews.submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          input: {
+            ...form,
+            captchaToken,
+          },
+        }),
       });
 
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.error || "Failed to submit review");
+        throw new Error(data.error?.message || "Failed to submit review");
       }
 
       setSubmitted(true);
       setForm({ customerName: "", customerEmail: "", rating: 5, text: "" });
+      captchaRef.current?.resetCaptcha();
       setTimeout(() => setSubmitted(false), 5000);
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
@@ -122,6 +136,17 @@ export default function ReviewSubmitForm() {
             placeholder="Tell us about your experience with Jason Clark Plumbing..."
           />
         </div>
+
+        {/* hCaptcha Widget */}
+        {import.meta.env.VITE_HCAPTCHA_SITE_KEY && (
+          <div className="flex justify-center py-4">
+            <HCaptcha
+              ref={captchaRef}
+              sitekey={import.meta.env.VITE_HCAPTCHA_SITE_KEY}
+              theme="dark"
+            />
+          </div>
+        )}
 
         <button
           type="submit"

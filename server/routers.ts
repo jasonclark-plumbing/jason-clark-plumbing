@@ -3,6 +3,7 @@ import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { TRPCError } from "@trpc/server";
 import bcrypt from "bcryptjs";
 import { sendReviewNotification } from "./_core/email";
+import { verifyCaptcha } from "./captcha";
 import {
   submitReview,
   getPendingReviews,
@@ -24,10 +25,20 @@ export const appRouter = router({
           customerEmail: z.string().email("Valid email required"),
           rating: z.number().min(1).max(5),
           text: z.string().min(10, "Review must be at least 10 characters"),
+          captchaToken: z.string().min(1, "CAPTCHA verification required"),
         })
       )
       .mutation(async ({ input }) => {
         try {
+          // Verify CAPTCHA token
+          const captchaValid = await verifyCaptcha(input.captchaToken);
+          if (!captchaValid) {
+            throw new TRPCError({
+              code: "BAD_REQUEST",
+              message: "CAPTCHA verification failed. Please try again.",
+            });
+          }
+
           const review = await submitReview({
             customerName: input.customerName,
             customerEmail: input.customerEmail,
