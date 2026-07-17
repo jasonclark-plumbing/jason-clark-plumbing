@@ -38,11 +38,17 @@ export default function AdminDashboard() {
         credentials: "include",
       });
 
+      const data = await response.json();
+
+      // Check for tRPC error
+      if (data.error) {
+        throw new Error(data.error.message || "Failed to fetch reviews");
+      }
+
       if (!response.ok) {
         throw new Error("Failed to fetch reviews");
       }
 
-      const data = await response.json();
       setReviews(data.result?.data || []);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load reviews");

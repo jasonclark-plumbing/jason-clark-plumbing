@@ -22,12 +22,21 @@ export default function AdminLogin() {
         }),
       });
 
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error?.message || "Login failed");
+      const data = await response.json();
+
+      // Check for tRPC error
+      if (data.error) {
+        throw new Error(data.error.message || "Login failed");
       }
 
-      window.location.href = "/admin/dashboard";
+      if (!response.ok) {
+        throw new Error("Login failed");
+      }
+
+      // Add a small delay to ensure session cookie is set before redirecting
+      setTimeout(() => {
+        window.location.href = "/admin/dashboard";
+      }, 500);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");
     } finally {
