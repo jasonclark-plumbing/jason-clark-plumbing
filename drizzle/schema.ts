@@ -33,3 +33,18 @@ export const reviews = mysqlTable("reviews", {
 
 export type Review = typeof reviews.$inferSelect;
 export type InsertReview = typeof reviews.$inferInsert;
+
+/**
+ * Admin replies to customer reviews
+ */
+export const replies = mysqlTable("replies", {
+  id: int("id").autoincrement().primaryKey(),
+  reviewId: int("review_id").notNull(),
+  adminId: int("admin_id").notNull(),
+  text: text("text").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Reply = typeof replies.$inferSelect;
+export type InsertReply = typeof replies.$inferInsert;

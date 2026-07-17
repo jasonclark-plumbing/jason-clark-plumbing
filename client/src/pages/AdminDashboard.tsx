@@ -1,5 +1,15 @@
-import { useEffect, useState } from "react";
-import { Star, Check, X, Trash2, Search, ChevronDown } from "lucide-react";
+"use client";
+
+import { useState, useEffect } from "react";
+import { Star, Check, X, Trash2, Search, ChevronDown, MessageSquare } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
 interface Review {
   id: number;
@@ -9,6 +19,14 @@ interface Review {
   text: string;
   status: "pending" | "approved" | "rejected";
   submittedAt: string;
+}
+
+interface Reply {
+  id: number;
+  reviewId: number;
+  adminId: number;
+  text: string;
+  createdAt: string;
 }
 
 type SortField = "date" | "rating" | "name";
@@ -27,6 +45,11 @@ export default function AdminDashboard() {
   const [selectedReviews, setSelectedReviews] = useState<Set<number>>(new Set());
   const [bulkActionLoading, setBulkActionLoading] = useState(false);
   const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
+  const [replyModalOpen, setReplyModalOpen] = useState(false);
+  const [selectedReviewForReply, setSelectedReviewForReply] = useState<Review | null>(null);
+  const [replyText, setReplyText] = useState("");
+  const [replyLoading, setReplyLoading] = useState(false);
+  const [replies, setReplies] = useState<Record<number, Reply[]>>({});
 
   useEffect(() => {
     fetchReviews();
@@ -59,10 +82,32 @@ export default function AdminDashboard() {
 
       setReviews(data.result?.data || []);
       setError("");
+
+      // Fetch replies for all reviews
+      for (const review of data.result?.data || []) {
+        fetchReplies(review.id);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load reviews");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchReplies = async (reviewId: number) => {
+    try {
+      const response = await fetch(`/api/trpc/reviews.getReplies?input=${JSON.stringify({ reviewId })}`, {
+        credentials: "include",
+      });
+      const data = await response.json();
+      if (data.result?.data) {
+        setReplies((prev) => ({
+          ...prev,
+          [reviewId]: data.result.data,
+        }));
+      }
+    } catch (err) {
+      console.error("Failed to fetch replies:", err);
     }
   };
 
@@ -76,16 +121,10 @@ export default function AdminDashboard() {
         body: JSON.stringify({ reviewId }),
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to approve review");
-      }
+      if (!response.ok) throw new Error("Failed to approve review");
 
       setReviews((prev) => prev.filter((r) => r.id !== reviewId));
-      setSelectedReviews((prev) => {
-        const newSet = new Set(prev);
-        newSet.delete(reviewId);
-        return newSet;
-      });
+      setError("");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to approve review");
     } finally {
@@ -103,16 +142,10 @@ export default function AdminDashboard() {
         body: JSON.stringify({ reviewId }),
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to reject review");
-      }
+      if (!response.ok) throw new Error("Failed to reject review");
 
       setReviews((prev) => prev.filter((r) => r.id !== reviewId));
-      setSelectedReviews((prev) => {
-        const newSet = new Set(prev);
-        newSet.delete(reviewId);
-        return newSet;
-      });
+      setError("");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to reject review");
     } finally {
@@ -121,8 +154,6 @@ export default function AdminDashboard() {
   };
 
   const handleDelete = async (reviewId: number) => {
-    if (!confirm("Are you sure you want to delete this review?")) return;
-
     try {
       setActionLoading(reviewId);
       const response = await fetch("/api/trpc/reviews.delete", {
@@ -132,16 +163,10 @@ export default function AdminDashboard() {
         body: JSON.stringify({ reviewId }),
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to delete review");
-      }
+      if (!response.ok) throw new Error("Failed to delete review");
 
       setReviews((prev) => prev.filter((r) => r.id !== reviewId));
-      setSelectedReviews((prev) => {
-        const newSet = new Set(prev);
-        newSet.delete(reviewId);
-        return newSet;
-      });
+      setError("");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to delete review");
     } finally {
@@ -150,14 +175,9 @@ export default function AdminDashboard() {
   };
 
   const handleBulkApprove = async () => {
-    if (selectedReviews.size === 0) return;
-    if (!confirm(`Approve ${selectedReviews.size} review(s)?`)) return;
-
     try {
       setBulkActionLoading(true);
-      const reviewIds = Array.from(selectedReviews);
-
-      for (const reviewId of reviewIds) {
+      for (const reviewId of Array.from(selectedReviews)) {
         await fetch("/api/trpc/reviews.approve", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -165,25 +185,20 @@ export default function AdminDashboard() {
           body: JSON.stringify({ reviewId }),
         });
       }
-
       setReviews((prev) => prev.filter((r) => !selectedReviews.has(r.id)));
       setSelectedReviews(new Set());
+      setError("");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to bulk approve reviews");
+      setError(err instanceof Error ? err.message : "Failed to approve reviews");
     } finally {
       setBulkActionLoading(false);
     }
   };
 
   const handleBulkReject = async () => {
-    if (selectedReviews.size === 0) return;
-    if (!confirm(`Reject ${selectedReviews.size} review(s)?`)) return;
-
     try {
       setBulkActionLoading(true);
-      const reviewIds = Array.from(selectedReviews);
-
-      for (const reviewId of reviewIds) {
+      for (const reviewId of Array.from(selectedReviews)) {
         await fetch("/api/trpc/reviews.reject", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -191,11 +206,11 @@ export default function AdminDashboard() {
           body: JSON.stringify({ reviewId }),
         });
       }
-
       setReviews((prev) => prev.filter((r) => !selectedReviews.has(r.id)));
       setSelectedReviews(new Set());
+      setError("");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to bulk reject reviews");
+      setError(err instanceof Error ? err.message : "Failed to reject reviews");
     } finally {
       setBulkActionLoading(false);
     }
@@ -233,6 +248,54 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleReplySubmit = async () => {
+    if (!selectedReviewForReply || !replyText.trim()) return;
+
+    try {
+      setReplyLoading(true);
+      const response = await fetch("/api/trpc/reviews.createReply", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          reviewId: selectedReviewForReply.id,
+          text: replyText,
+        }),
+      });
+
+      if (!response.ok) throw new Error("Failed to create reply");
+
+      // Fetch updated replies
+      await fetchReplies(selectedReviewForReply.id);
+      setReplyText("");
+      setReplyModalOpen(false);
+      setError("");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to create reply");
+    } finally {
+      setReplyLoading(false);
+    }
+  };
+
+  const handleDeleteReply = async (replyId: number, reviewId: number) => {
+    try {
+      const response = await fetch("/api/trpc/reviews.deleteReply", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ replyId }),
+      });
+
+      if (!response.ok) throw new Error("Failed to delete reply");
+
+      // Fetch updated replies
+      await fetchReplies(reviewId);
+      setError("");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to delete reply");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-black text-cream pt-20 pb-20">
       {/* Header */}
@@ -250,81 +313,82 @@ export default function AdminDashboard() {
           </button>
         </div>
 
+        {/* Error Message */}
         {error && (
-          <div className="mb-6 p-4 bg-red-500/10 border border-red-500/40 text-red-400 rounded">
+          <div className="mb-6 p-4 bg-red-600/20 border border-red-600/40 text-red-400 rounded">
             {error}
           </div>
         )}
 
+        {/* Loading State */}
         {loading ? (
           <div className="text-center py-12">
             <p className="text-cream/60">Loading reviews...</p>
           </div>
         ) : (
           <>
-            {/* Search and Filter Bar */}
-            <div className="mb-8 space-y-4">
-              <div className="flex gap-4 flex-wrap items-start">
-                {/* Search Input */}
-                <div className="flex-1 min-w-64 relative">
-                  <Search size={18} className="absolute left-3 top-3 text-gold/60" />
-                  <input
-                    type="text"
-                    placeholder="Search by name, email, or review text..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full bg-black/50 border border-gold/30 text-cream px-4 py-2 pl-10 focus:border-gold outline-none transition"
-                  />
-                </div>
+            {/* Controls */}
+            <div className="flex flex-col gap-4 mb-8">
+              {/* Search Bar */}
+              <div className="relative">
+                <Search className="absolute left-3 top-3 text-cream/40" size={20} />
+                <input
+                  type="text"
+                  placeholder="Search by name, email, or review text..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2 bg-black border border-gold/20 text-cream placeholder-cream/40 focus:outline-none focus:border-gold/40"
+                />
+              </div>
 
+              {/* Filter and Sort Controls */}
+              <div className="flex flex-wrap gap-3 items-center">
                 {/* Sort Dropdown */}
                 <div className="relative">
                   <button
                     onClick={() => setSortDropdownOpen(!sortDropdownOpen)}
-                    className="flex items-center gap-2 px-4 py-2 border border-gold/30 text-cream hover:border-gold transition whitespace-nowrap"
+                    className="flex items-center gap-2 px-4 py-2 border border-gold/20 text-cream hover:border-gold/40 transition"
                   >
-                    Sort by {sortField === "date" ? "Date" : sortField === "rating" ? "Rating" : "Name"}
+                    Sort by {sortField.charAt(0).toUpperCase() + sortField.slice(1)}
                     <ChevronDown size={16} />
                   </button>
                   {sortDropdownOpen && (
-                    <div className="absolute top-full left-0 mt-1 bg-black border border-gold/30 rounded z-10 min-w-40">
-                      {(["date", "rating", "name"] as SortField[]).map((field) => (
+                    <div className="absolute top-full mt-1 bg-black border border-gold/20 z-10 min-w-max">
+                      {(["date", "rating", "name"] as const).map((field) => (
                         <button
                           key={field}
                           onClick={() => {
                             setSortField(field);
                             setSortDropdownOpen(false);
                           }}
-                          className={`block w-full text-left px-4 py-2 text-cream hover:bg-gold/10 transition ${
-                            sortField === field ? "bg-gold/10 text-gold" : ""
+                          className={`block w-full text-left px-4 py-2 hover:bg-gold/10 ${
+                            sortField === field ? "text-gold" : "text-cream"
                           }`}
                         >
-                          {field === "date" ? "Date" : field === "rating" ? "Rating" : "Name"}
+                          {field.charAt(0).toUpperCase() + field.slice(1)}
                         </button>
                       ))}
                     </div>
                   )}
                 </div>
 
-                {/* Sort Order Toggle */}
+                {/* Sort Direction */}
                 <button
                   onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
-                  className="px-4 py-2 border border-gold/30 text-cream hover:border-gold transition whitespace-nowrap"
+                  className="px-4 py-2 border border-gold/20 text-cream hover:border-gold/40 transition"
                 >
                   {sortOrder === "asc" ? "↑ Ascending" : "↓ Descending"}
                 </button>
-              </div>
 
-              {/* Status Filter Buttons */}
-              <div className="flex gap-2 flex-wrap">
-                {(["all", "pending", "approved", "rejected"] as StatusFilter[]).map((status) => (
+                {/* Status Filters */}
+                {(["all", "pending", "approved", "rejected"] as const).map((status) => (
                   <button
                     key={status}
                     onClick={() => setStatusFilter(status)}
                     className={`px-4 py-2 border transition ${
                       statusFilter === status
                         ? "border-gold bg-gold/10 text-gold"
-                        : "border-gold/30 text-cream hover:border-gold"
+                        : "border-gold/20 text-cream hover:border-gold/40"
                     }`}
                   >
                     {status.charAt(0).toUpperCase() + status.slice(1)}
@@ -335,8 +399,8 @@ export default function AdminDashboard() {
               {/* Bulk Actions */}
               {selectedReviews.size > 0 && (
                 <div className="flex gap-3 p-4 bg-gold/5 border border-gold/20 rounded">
-                  <span className="text-cream/80">
-                    {selectedReviews.size} selected
+                  <span className="text-cream/80 text-sm">
+                    {selectedReviews.size} review{selectedReviews.size !== 1 ? "s" : ""} selected
                   </span>
                   <button
                     onClick={handleBulkApprove}
@@ -428,21 +492,44 @@ export default function AdminDashboard() {
 
                         <p className="text-cream/80 mb-3">{review.text}</p>
 
+                        {/* Display Replies */}
+                        {replies[review.id] && replies[review.id].length > 0 && (
+                          <div className="mb-4 p-4 bg-gold/5 border border-gold/20 rounded">
+                            <p className="text-sm font-semibold text-gold mb-2">Admin Response:</p>
+                            {replies[review.id].map((reply) => (
+                              <div key={reply.id} className="text-cream/80 text-sm mb-2">
+                                <p>{reply.text}</p>
+                                <div className="flex justify-between items-center mt-2 text-xs text-cream/60">
+                                  <span>{new Date(reply.createdAt).toLocaleString()}</span>
+                                  <button
+                                    onClick={() => handleDeleteReply(reply.id, review.id)}
+                                    className="text-red-400 hover:text-red-300"
+                                  >
+                                    Delete
+                                  </button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
                         <div className="flex justify-between items-center text-sm text-cream/60 mb-4">
                           <span>Submitted: {new Date(review.submittedAt).toLocaleString()}</span>
-                          <span className={`px-3 py-1 rounded text-xs font-semibold ${
-                            review.status === "pending"
-                              ? "bg-yellow-600/20 text-yellow-400"
-                              : review.status === "approved"
-                              ? "bg-green-600/20 text-green-400"
-                              : "bg-red-600/20 text-red-400"
-                          }`}>
+                          <span
+                            className={`px-3 py-1 rounded text-xs font-semibold ${
+                              review.status === "pending"
+                                ? "bg-yellow-600/20 text-yellow-400"
+                                : review.status === "approved"
+                                ? "bg-green-600/20 text-green-400"
+                                : "bg-red-600/20 text-red-400"
+                            }`}
+                          >
                             {review.status.charAt(0).toUpperCase() + review.status.slice(1)}
                           </span>
                         </div>
 
                         {/* Action Buttons */}
-                        <div className="flex gap-3">
+                        <div className="flex gap-3 flex-wrap">
                           {review.status === "pending" && (
                             <>
                               <button
@@ -464,6 +551,16 @@ export default function AdminDashboard() {
                             </>
                           )}
                           <button
+                            onClick={() => {
+                              setSelectedReviewForReply(review);
+                              setReplyModalOpen(true);
+                            }}
+                            className="flex items-center gap-2 px-4 py-2 bg-blue-600/20 border border-blue-600/40 text-blue-400 hover:bg-blue-600/30 transition"
+                          >
+                            <MessageSquare size={16} />
+                            Reply
+                          </button>
+                          <button
                             onClick={() => handleDelete(review.id)}
                             disabled={actionLoading === review.id}
                             className="flex items-center gap-2 px-4 py-2 bg-red-600/20 border border-red-600/40 text-red-400 hover:bg-red-600/30 transition disabled:opacity-50"
@@ -481,6 +578,47 @@ export default function AdminDashboard() {
           </>
         )}
       </div>
+
+      {/* Reply Modal */}
+      <Dialog open={replyModalOpen} onOpenChange={setReplyModalOpen}>
+        <DialogContent className="bg-black border border-gold/20">
+          <DialogHeader>
+            <DialogTitle className="text-gold">Reply to Review</DialogTitle>
+            <DialogDescription className="text-cream/60">
+              {selectedReviewForReply?.customerName} - {selectedReviewForReply?.customerEmail}
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <div className="p-3 bg-gold/5 border border-gold/20 rounded">
+              <p className="text-sm text-cream/80">{selectedReviewForReply?.text}</p>
+            </div>
+
+            <textarea
+              value={replyText}
+              onChange={(e) => setReplyText(e.target.value)}
+              placeholder="Write your response..."
+              className="w-full p-3 bg-black border border-gold/20 text-cream placeholder-cream/40 focus:outline-none focus:border-gold/40 rounded min-h-[120px]"
+            />
+          </div>
+
+          <DialogFooter>
+            <button
+              onClick={() => setReplyModalOpen(false)}
+              className="px-4 py-2 border border-gold/20 text-cream hover:border-gold/40 transition"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleReplySubmit}
+              disabled={replyLoading || !replyText.trim()}
+              className="px-4 py-2 bg-blue-600/20 border border-blue-600/40 text-blue-400 hover:bg-blue-600/30 transition disabled:opacity-50"
+            >
+              {replyLoading ? "Sending..." : "Send Reply"}
+            </button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

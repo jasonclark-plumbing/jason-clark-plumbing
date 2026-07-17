@@ -13,14 +13,47 @@ interface DatabaseReview {
   submittedAt: string;
 }
 
+interface Reply {
+  id: number;
+  reviewId: number;
+  adminId: number;
+  text: string;
+  createdAt: string;
+}
+
 export default function Reviews() {
   const [approvedReviews, setApprovedReviews] = useState<DatabaseReview[]>([]);
+  const [replies, setReplies] = useState<Record<number, Reply[]>>({});
+  const [loadingReplies, setLoadingReplies] = useState<Set<number>>(new Set());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
     fetchApprovedReviews();
   }, []);
+
+  const fetchReplies = async (reviewId: number) => {
+    try {
+      const response = await fetch(`/api/trpc/reviews.getReplies?input=${encodeURIComponent(JSON.stringify({ reviewId }))}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) return;
+
+      const data = await response.json();
+      if (data.result?.data) {
+        setReplies((prev) => ({
+          ...prev,
+          [reviewId]: data.result.data,
+        }));
+      }
+    } catch (err) {
+      console.error("Error fetching replies:", err);
+    }
+  };
 
   const fetchApprovedReviews = async () => {
     try {
@@ -44,6 +77,11 @@ export default function Reviews() {
       // tRPC returns data in result.data format
       const reviews = data.result?.data || [];
       setApprovedReviews(reviews);
+      
+      // Fetch replies for each review
+      for (const review of reviews) {
+        fetchReplies(review.id);
+      }
     } catch (err) {
       console.error("Error fetching reviews:", err);
       // Don't show error to user - just use static testimonials
@@ -129,6 +167,25 @@ export default function Reviews() {
                 <p className="text-lg text-cream mb-6 leading-relaxed italic">
                   {review.text}
                 </p>
+
+                {/* Admin Reply */}
+                {!review.isStatic && replies[review.id] && replies[review.id].length > 0 && (
+                  <div className="mt-6 p-4 bg-gold/5 border border-gold/20 rounded">
+                    <p className="text-sm font-semibold text-gold mb-2">Jason Clark's Response:</p>
+                    {replies[review.id].map((reply) => (
+                      <div key={reply.id}>
+                        <p className="text-cream/80 text-sm mb-2">{reply.text}</p>
+                        <p className="text-cream/40 text-xs">
+                          {new Date(reply.createdAt).toLocaleDateString("en-GB", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                          })}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                )}
 
                 {/* Customer Info */}
                 <div className="flex items-center justify-between pt-4 border-t border-gold/20">

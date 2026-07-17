@@ -16,6 +16,9 @@ import {
   createAdmin,
   getReviewById,
   getAllReviews,
+  createReply,
+  getRepliesForReview,
+  deleteReply,
 } from "./db";
 
 export const appRouter = router({
@@ -297,6 +300,90 @@ export const appRouter = router({
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
             message: "Failed to delete review",
+          });
+        }
+      }),
+
+    // Admin: Create reply to review
+    createReply: protectedProcedure
+      .input(
+        z.object({
+          reviewId: z.number(),
+          text: z.string().min(1, "Reply text is required"),
+        })
+      )
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user?.role !== "admin") {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Admin access required",
+          });
+        }
+
+        try {
+          const reply = await createReply({
+            reviewId: input.reviewId,
+            adminId: ctx.user.id,
+            text: input.text,
+          });
+
+          if (!reply) {
+            throw new TRPCError({
+              code: "INTERNAL_SERVER_ERROR",
+              message: "Failed to create reply",
+            });
+          }
+
+          return reply;
+        } catch (error) {
+          console.error("[tRPC] Create reply error:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to create reply",
+          });
+        }
+      }),
+
+    // Public: Get replies for a review
+    getReplies: publicProcedure
+      .input(z.object({ reviewId: z.number() }))
+      .query(async ({ input }) => {
+        try {
+          return await getRepliesForReview(input.reviewId);
+        } catch (error) {
+          console.error("[tRPC] Get replies error:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to fetch replies",
+          });
+        }
+      }),
+
+    // Admin: Delete reply
+    deleteReply: protectedProcedure
+      .input(z.object({ replyId: z.number() }))
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user?.role !== "admin") {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Admin access required",
+          });
+        }
+
+        try {
+          const success = await deleteReply(input.replyId);
+          if (!success) {
+            throw new TRPCError({
+              code: "INTERNAL_SERVER_ERROR",
+              message: "Failed to delete reply",
+            });
+          }
+          return { success: true };
+        } catch (error) {
+          console.error("[tRPC] Delete reply error:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to delete reply",
           });
         }
       }),

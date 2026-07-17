@@ -1,6 +1,6 @@
 import { eq, and } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { admins, reviews, type InsertReview, type Review, type Admin, type InsertAdmin } from "../drizzle/schema";
+import { admins, reviews, replies, type InsertReview, type Review, type Admin, type InsertAdmin, type Reply, type InsertReply } from "../drizzle/schema";
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
@@ -195,6 +195,46 @@ export async function deleteReview(reviewId: number): Promise<boolean> {
     return true;
   } catch (error) {
     console.error("[Database] Failed to delete review:", error);
+    return false;
+  }
+}
+
+// Reply functions
+export async function createReply(reply: InsertReply): Promise<Reply | null> {
+  const db = await getDb();
+  if (!db) return null;
+
+  try {
+    const result = await db.insert(replies).values(reply);
+    const created = await db.select().from(replies).where(eq(replies.id, result[0].insertId as number)).limit(1);
+    return created.length > 0 ? created[0] : null;
+  } catch (error) {
+    console.error("[Database] Failed to create reply:", error);
+    return null;
+  }
+}
+
+export async function getRepliesForReview(reviewId: number): Promise<Reply[]> {
+  const db = await getDb();
+  if (!db) return [];
+
+  try {
+    return await db.select().from(replies).where(eq(replies.reviewId, reviewId)).orderBy(replies.createdAt);
+  } catch (error) {
+    console.error("[Database] Failed to get replies:", error);
+    return [];
+  }
+}
+
+export async function deleteReply(replyId: number): Promise<boolean> {
+  const db = await getDb();
+  if (!db) return false;
+
+  try {
+    await db.delete(replies).where(eq(replies.id, replyId));
+    return true;
+  } catch (error) {
+    console.error("[Database] Failed to delete reply:", error);
     return false;
   }
 }
