@@ -241,6 +241,20 @@ export default defineConfig({
       "/api": {
         target: "http://localhost:3001",
         changeOrigin: true,
+        cookieDomainRewrite: "",
+        onProxyReq: (proxyReq, req, res) => {
+          // Forward cookies from browser to backend
+          if (req.headers.cookie) {
+            proxyReq.setHeader("cookie", req.headers.cookie);
+          }
+        },
+        onProxyRes: (proxyRes, req, res) => {
+          // Forward Set-Cookie headers from backend to browser
+          const setCookie = proxyRes.headers["set-cookie"];
+          if (setCookie) {
+            res.setHeader("set-cookie", setCookie);
+          }
+        },
       },
     },
   },
