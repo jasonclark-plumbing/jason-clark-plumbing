@@ -47,7 +47,16 @@ export default function ReviewSubmitForm() {
 
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.error?.message || "Failed to submit review");
+        const errorMessage = data.error?.message || "Failed to submit review";
+        
+        // Handle rate limit error specifically
+        if (data.error?.code === "TOO_MANY_REQUESTS") {
+          throw new Error(
+            "You've reached the maximum number of reviews (5 per 24 hours). Please try again tomorrow."
+          );
+        }
+        
+        throw new Error(errorMessage);
       }
 
       setSubmitted(true);

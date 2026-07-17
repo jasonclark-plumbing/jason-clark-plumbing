@@ -4,6 +4,7 @@ import { TRPCError } from "@trpc/server";
 import bcrypt from "bcryptjs";
 import { sendReviewNotification } from "./_core/email";
 import { verifyCaptcha } from "./captcha";
+import { checkReviewRateLimit } from "./_core/rateLimit";
 import {
   submitReview,
   getPendingReviews,
@@ -28,8 +29,23 @@ export const appRouter = router({
           captchaToken: z.string().min(1, "CAPTCHA verification required"),
         })
       )
-      .mutation(async ({ input }) => {
+      .mutation(async ({ input, ctx }) => {
         try {
+          // Get client IP address
+          const clientIp =
+            (ctx.req.headers["x-forwarded-for"] as string)?.split(",")[0].trim() ||
+            ctx.req.ip ||
+            "unknown";
+
+          // Check rate limit
+          const { allowed, remaining } = checkReviewRateLimit(clientIp);
+          if (!allowed) {
+            throw new TRPCError({
+              code: "TOO_MANY_REQUESTS",
+              message: "Too many reviews submitted from this IP. Please try again in 24 hours.",
+            });
+          }
+
           // Verify CAPTCHA token
           const captchaValid = await verifyCaptcha(input.captchaToken);
           if (!captchaValid) {
