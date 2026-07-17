@@ -75,6 +75,19 @@ export async function getPendingReviews(): Promise<Review[]> {
   }
 }
 
+export async function getReviewById(reviewId: number): Promise<Review | null> {
+  const db = await getDb();
+  if (!db) return null;
+
+  try {
+    const result = await db.select().from(reviews).where(eq(reviews.id, reviewId)).limit(1);
+    return result.length > 0 ? result[0] : null;
+  } catch (error) {
+    console.error("[Database] Failed to get review:", error);
+    return null;
+  }
+}
+
 export async function getApprovedReviews(): Promise<Review[]> {
   const db = await getDb();
   if (!db) return [];

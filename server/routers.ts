@@ -2,7 +2,7 @@ import { z } from "zod";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { TRPCError } from "@trpc/server";
 import bcrypt from "bcryptjs";
-import { sendReviewNotification } from "./_core/email";
+import { sendNewReviewNotification, sendReviewApprovedNotification, sendReviewRejectedNotification } from "./_core/emailNotification";
 import { verifyCaptcha } from "./captcha";
 import { checkReviewRateLimit } from "./_core/rateLimit";
 import {
@@ -14,6 +14,7 @@ import {
   deleteReview,
   getAdminByEmail,
   createAdmin,
+  getReviewById,
 } from "./db";
 
 export const appRouter = router({
@@ -71,12 +72,18 @@ export const appRouter = router({
           }
 
           // Send email notification to admin
-          await sendReviewNotification(
-            input.customerName,
-            input.customerEmail,
-            input.rating,
-            input.text
-          );
+          try {
+            await sendNewReviewNotification(
+              "jason@jasonclark.online",
+              input.customerName,
+              input.customerEmail,
+              input.rating,
+              input.text
+            );
+          } catch (emailError) {
+            console.error("Failed to send review notification email:", emailError);
+            // Don't fail the review submission if email fails
+          }
 
           return { success: true, reviewId: review.id };
         } catch (error) {
@@ -135,6 +142,15 @@ export const appRouter = router({
         }
 
         try {
+          // Get review details before approving
+          const review = await getReviewById(input.reviewId);
+          if (!review) {
+            throw new TRPCError({
+              code: "NOT_FOUND",
+              message: "Review not found",
+            });
+          }
+
           const success = await approveReview(input.reviewId, ctx.user.id);
           if (!success) {
             throw new TRPCError({
@@ -142,6 +158,21 @@ export const appRouter = router({
               message: "Failed to approve review",
             });
           }
+
+          // Send approval notification email
+          try {
+            await sendReviewApprovedNotification(
+              "jason@jasonclark.online",
+              review.customerName,
+              review.customerEmail,
+              review.rating,
+              review.text
+            );
+          } catch (emailError) {
+            console.error("Failed to send approval notification email:", emailError);
+            // Don't fail the approval if email fails
+          }
+
           return { success: true };
         } catch (error) {
           console.error("[tRPC] Approve review error:", error);
@@ -164,6 +195,15 @@ export const appRouter = router({
         }
 
         try {
+          // Get review details before rejecting
+          const review = await getReviewById(input.reviewId);
+          if (!review) {
+            throw new TRPCError({
+              code: "NOT_FOUND",
+              message: "Review not found",
+            });
+          }
+
           const success = await rejectReview(input.reviewId, ctx.user.id);
           if (!success) {
             throw new TRPCError({
@@ -171,6 +211,21 @@ export const appRouter = router({
               message: "Failed to reject review",
             });
           }
+
+          // Send rejection notification email
+          try {
+            await sendReviewRejectedNotification(
+              "jason@jasonclark.online",
+              review.customerName,
+              review.customerEmail,
+              review.rating,
+              review.text
+            );
+          } catch (emailError) {
+            console.error("Failed to send rejection notification email:", emailError);
+            // Don't fail the rejection if email fails
+          }
+
           return { success: true };
         } catch (error) {
           console.error("[tRPC] Reject review error:", error);
