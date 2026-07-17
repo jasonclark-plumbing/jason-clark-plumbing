@@ -29,6 +29,11 @@ export default function AdminLogin() {
         throw new Error(data.error.message || "Login failed");
       }
 
+      // Check for successful result
+      if (!data.result?.data?.success) {
+        throw new Error("Login failed");
+      }
+
       if (!response.ok) {
         throw new Error("Login failed");
       }
