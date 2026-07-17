@@ -103,6 +103,9 @@
 - [x] curl tests confirm session cookie is set
 - [x] curl tests confirm protected endpoints work with cookie
 - [x] tRPC procedures return correct data format
+- [x] Unit tests for CAPTCHA verification
+- [x] Unit tests for rate limiting
+- [x] Unit tests for email notifications
 
 ## Known Limitations & Future Enhancements
 
