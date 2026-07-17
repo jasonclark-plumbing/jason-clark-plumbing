@@ -1,4 +1,5 @@
 import { testimonials } from "@/data/testimonials";
+import ReviewSubmitForm from "@/components/ReviewSubmitForm";
 
 export default function Reviews() {
   return (
@@ -55,6 +56,11 @@ export default function Reviews() {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Review Submission Form */}
+        <div className="mt-16 mb-16">
+          <ReviewSubmitForm />
         </div>
 
         {/* CTA Section */}
