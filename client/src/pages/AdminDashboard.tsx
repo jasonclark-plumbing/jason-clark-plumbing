@@ -23,18 +23,26 @@ export default function AdminDashboard() {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortField, setSortField] = useState<SortField>("date");
   const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>("pending");
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [selectedReviews, setSelectedReviews] = useState<Set<number>>(new Set());
   const [bulkActionLoading, setBulkActionLoading] = useState(false);
+  const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
 
   useEffect(() => {
-    fetchPendingReviews();
-  }, []);
+    fetchReviews();
+  }, [statusFilter, sortField, sortOrder, searchQuery]);
 
-  const fetchPendingReviews = async () => {
+  const fetchReviews = async () => {
     try {
       setLoading(true);
-      const response = await fetch("/api/trpc/reviews.getPending", {
+      const input = {
+        status: statusFilter,
+        sortBy: sortField,
+        sortOrder: sortOrder,
+        searchQuery: searchQuery || "",
+      };
+      const queryString = encodeURIComponent(JSON.stringify(input));
+      const response = await fetch(`/api/trpc/reviews.getAll?input=${queryString}`, {
         credentials: "include",
       });
 
@@ -50,40 +58,13 @@ export default function AdminDashboard() {
       }
 
       setReviews(data.result?.data || []);
+      setError("");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load reviews");
     } finally {
       setLoading(false);
     }
   };
-
-  // Filter reviews based on search query and status
-  const filteredReviews = reviews.filter((review) => {
-    const query = searchQuery.toLowerCase();
-    const matchesSearch =
-      review.customerName.toLowerCase().includes(query) ||
-      review.customerEmail.toLowerCase().includes(query) ||
-      review.text.toLowerCase().includes(query);
-    
-    const matchesStatus = statusFilter === "all" || review.status === statusFilter;
-    
-    return matchesSearch && matchesStatus;
-  });
-
-  // Sort reviews
-  const sortedReviews = [...filteredReviews].sort((a, b) => {
-    let compareValue = 0;
-
-    if (sortField === "date") {
-      compareValue = new Date(a.submittedAt).getTime() - new Date(b.submittedAt).getTime();
-    } else if (sortField === "rating") {
-      compareValue = a.rating - b.rating;
-    } else if (sortField === "name") {
-      compareValue = a.customerName.localeCompare(b.customerName);
-    }
-
-    return sortOrder === "asc" ? compareValue : -compareValue;
-  });
 
   const handleApprove = async (reviewId: number) => {
     try {
@@ -233,10 +214,10 @@ export default function AdminDashboard() {
   };
 
   const toggleSelectAll = () => {
-    if (selectedReviews.size === sortedReviews.length) {
+    if (selectedReviews.size === reviews.length) {
       setSelectedReviews(new Set());
     } else {
-      setSelectedReviews(new Set(sortedReviews.map((r) => r.id)));
+      setSelectedReviews(new Set(reviews.map((r) => r.id)));
     }
   };
 
@@ -279,15 +260,11 @@ export default function AdminDashboard() {
           <div className="text-center py-12">
             <p className="text-cream/60">Loading reviews...</p>
           </div>
-        ) : reviews.length === 0 ? (
-          <div className="text-center py-12 border border-gold/20 rounded">
-            <p className="text-cream/60">No pending reviews</p>
-          </div>
         ) : (
           <>
             {/* Search and Filter Bar */}
             <div className="mb-8 space-y-4">
-              <div className="flex gap-4 flex-wrap">
+              <div className="flex gap-4 flex-wrap items-start">
                 {/* Search Input */}
                 <div className="flex-1 min-w-64 relative">
                   <Search size={18} className="absolute left-3 top-3 text-gold/60" />
@@ -302,47 +279,57 @@ export default function AdminDashboard() {
 
                 {/* Sort Dropdown */}
                 <div className="relative">
-                  <button className="flex items-center gap-2 px-4 py-2 border border-gold/30 text-cream hover:border-gold transition">
+                  <button
+                    onClick={() => setSortDropdownOpen(!sortDropdownOpen)}
+                    className="flex items-center gap-2 px-4 py-2 border border-gold/30 text-cream hover:border-gold transition whitespace-nowrap"
+                  >
                     Sort by {sortField === "date" ? "Date" : sortField === "rating" ? "Rating" : "Name"}
                     <ChevronDown size={16} />
                   </button>
-                  <div className="absolute top-full left-0 mt-1 bg-black border border-gold/30 rounded hidden group-hover:block z-10">
-                    {(["date", "rating", "name"] as SortField[]).map((field) => (
-                      <button
-                        key={field}
-                        onClick={() => setSortField(field)}
-                        className="block w-full text-left px-4 py-2 text-cream hover:bg-gold/10 transition"
-                      >
-                        {field === "date" ? "Date" : field === "rating" ? "Rating" : "Name"}
-                      </button>
-                    ))}
-                  </div>
+                  {sortDropdownOpen && (
+                    <div className="absolute top-full left-0 mt-1 bg-black border border-gold/30 rounded z-10 min-w-40">
+                      {(["date", "rating", "name"] as SortField[]).map((field) => (
+                        <button
+                          key={field}
+                          onClick={() => {
+                            setSortField(field);
+                            setSortDropdownOpen(false);
+                          }}
+                          className={`block w-full text-left px-4 py-2 text-cream hover:bg-gold/10 transition ${
+                            sortField === field ? "bg-gold/10 text-gold" : ""
+                          }`}
+                        >
+                          {field === "date" ? "Date" : field === "rating" ? "Rating" : "Name"}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
-                  {/* Sort Order Toggle */}
+                {/* Sort Order Toggle */}
                 <button
                   onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
-                  className="px-4 py-2 border border-gold/30 text-cream hover:border-gold transition"
+                  className="px-4 py-2 border border-gold/30 text-cream hover:border-gold transition whitespace-nowrap"
                 >
                   {sortOrder === "asc" ? "↑ Ascending" : "↓ Descending"}
                 </button>
+              </div>
 
-                {/* Status Filter */}
-                <div className="flex gap-2">
-                  {(["all", "pending", "approved", "rejected"] as StatusFilter[]).map((status) => (
-                    <button
-                      key={status}
-                      onClick={() => setStatusFilter(status)}
-                      className={`px-4 py-2 border transition ${
-                        statusFilter === status
-                          ? "border-gold bg-gold/10 text-gold"
-                          : "border-gold/30 text-cream hover:border-gold"
-                      }`}
-                    >
-                      {status.charAt(0).toUpperCase() + status.slice(1)}
-                    </button>
-                  ))}
-                </div>
+              {/* Status Filter Buttons */}
+              <div className="flex gap-2 flex-wrap">
+                {(["all", "pending", "approved", "rejected"] as StatusFilter[]).map((status) => (
+                  <button
+                    key={status}
+                    onClick={() => setStatusFilter(status)}
+                    className={`px-4 py-2 border transition ${
+                      statusFilter === status
+                        ? "border-gold bg-gold/10 text-gold"
+                        : "border-gold/30 text-cream hover:border-gold"
+                    }`}
+                  >
+                    {status.charAt(0).toUpperCase() + status.slice(1)}
+                  </button>
+                ))}
               </div>
 
               {/* Bulk Actions */}
@@ -372,7 +359,7 @@ export default function AdminDashboard() {
 
               {/* Results Count */}
               <p className="text-cream/60 text-sm">
-                Showing {sortedReviews.length} of {filteredReviews.length} review{filteredReviews.length !== 1 ? "s" : ""}
+                Showing {reviews.length} review{reviews.length !== 1 ? "s" : ""}
                 {statusFilter !== "all" && ` (${statusFilter})`}
               </p>
             </div>
@@ -380,89 +367,102 @@ export default function AdminDashboard() {
             {/* Reviews List */}
             <div className="space-y-6">
               {/* Select All Checkbox */}
-              {sortedReviews.length > 0 && (
+              {reviews.length > 0 && (
                 <div className="flex items-center gap-3 p-4 bg-gold/5 border border-gold/20 rounded">
                   <input
                     type="checkbox"
-                    checked={selectedReviews.size === sortedReviews.length && sortedReviews.length > 0}
+                    checked={selectedReviews.size === reviews.length && reviews.length > 0}
                     onChange={toggleSelectAll}
                     className="w-4 h-4 cursor-pointer"
                   />
                   <span className="text-cream/80 text-sm">
-                    {selectedReviews.size === sortedReviews.length && sortedReviews.length > 0
+                    {selectedReviews.size === reviews.length && reviews.length > 0
                       ? "All selected"
                       : "Select all"}
                   </span>
                 </div>
               )}
 
-              {sortedReviews.length === 0 ? (
+              {reviews.length === 0 ? (
                 <div className="text-center py-12 border border-gold/20 rounded">
                   <p className="text-cream/60">
                     {searchQuery ? "No reviews match your search" : "No reviews found"}
                   </p>
                 </div>
               ) : (
-                sortedReviews.map((review) => (
+                reviews.map((review) => (
                   <div
                     key={review.id}
                     className={`bg-black border-2 p-6 transition ${
                       selectedReviews.has(review.id)
-                        ? "border-gold/60 bg-gold/5"
-                        : "border-gold/30 hover:border-gold/50"
+                        ? "border-gold bg-gold/5"
+                        : "border-gold/20 hover:border-gold/40"
                     }`}
                   >
-                    {/* Checkbox and Header */}
-                    <div className="flex gap-4 mb-4">
+                    <div className="flex gap-4">
+                      {/* Checkbox */}
                       <input
                         type="checkbox"
                         checked={selectedReviews.has(review.id)}
                         onChange={() => toggleSelectReview(review.id)}
-                        className="w-5 h-5 cursor-pointer mt-1"
+                        className="w-4 h-4 cursor-pointer mt-1"
                       />
+
+                      {/* Review Content */}
                       <div className="flex-1">
-                        <div className="flex justify-between items-start">
+                        <div className="flex justify-between items-start mb-3">
                           <div>
-                            <h3 className="text-xl font-semibold text-cream">{review.customerName}</h3>
+                            <h3 className="text-lg font-semibold text-cream">{review.customerName}</h3>
                             <p className="text-cream/60 text-sm">{review.customerEmail}</p>
                           </div>
                           <div className="flex gap-1">
-                            {Array.from({ length: 5 }).map((_, i) => (
+                            {[...Array(5)].map((_, i) => (
                               <Star
                                 key={i}
                                 size={16}
-                                className={i < review.rating ? "fill-gold text-gold" : "text-gold/30"}
+                                className={i < review.rating ? "fill-gold text-gold" : "text-gold/20"}
                               />
                             ))}
                           </div>
                         </div>
 
-                        {/* Review Text */}
-                        <p className="text-cream mt-4 mb-4 leading-relaxed line-clamp-3">{review.text}</p>
+                        <p className="text-cream/80 mb-3">{review.text}</p>
 
-                        {/* Metadata */}
-                        <p className="text-cream/40 text-sm mb-4">
-                          Submitted: {new Date(review.submittedAt).toLocaleString()}
-                        </p>
+                        <div className="flex justify-between items-center text-sm text-cream/60 mb-4">
+                          <span>Submitted: {new Date(review.submittedAt).toLocaleString()}</span>
+                          <span className={`px-3 py-1 rounded text-xs font-semibold ${
+                            review.status === "pending"
+                              ? "bg-yellow-600/20 text-yellow-400"
+                              : review.status === "approved"
+                              ? "bg-green-600/20 text-green-400"
+                              : "bg-red-600/20 text-red-400"
+                          }`}>
+                            {review.status.charAt(0).toUpperCase() + review.status.slice(1)}
+                          </span>
+                        </div>
 
-                        {/* Actions */}
-                        <div className="flex gap-3 flex-wrap">
-                          <button
-                            onClick={() => handleApprove(review.id)}
-                            disabled={actionLoading === review.id}
-                            className="flex items-center gap-2 px-4 py-2 bg-green-600/20 border border-green-600/40 text-green-400 hover:bg-green-600/30 transition disabled:opacity-50"
-                          >
-                            <Check size={16} />
-                            Approve
-                          </button>
-                          <button
-                            onClick={() => handleReject(review.id)}
-                            disabled={actionLoading === review.id}
-                            className="flex items-center gap-2 px-4 py-2 bg-yellow-600/20 border border-yellow-600/40 text-yellow-400 hover:bg-yellow-600/30 transition disabled:opacity-50"
-                          >
-                            <X size={16} />
-                            Reject
-                          </button>
+                        {/* Action Buttons */}
+                        <div className="flex gap-3">
+                          {review.status === "pending" && (
+                            <>
+                              <button
+                                onClick={() => handleApprove(review.id)}
+                                disabled={actionLoading === review.id}
+                                className="flex items-center gap-2 px-4 py-2 bg-green-600/20 border border-green-600/40 text-green-400 hover:bg-green-600/30 transition disabled:opacity-50"
+                              >
+                                <Check size={16} />
+                                Approve
+                              </button>
+                              <button
+                                onClick={() => handleReject(review.id)}
+                                disabled={actionLoading === review.id}
+                                className="flex items-center gap-2 px-4 py-2 bg-yellow-600/20 border border-yellow-600/40 text-yellow-400 hover:bg-yellow-600/30 transition disabled:opacity-50"
+                              >
+                                <X size={16} />
+                                Reject
+                              </button>
+                            </>
+                          )}
                           <button
                             onClick={() => handleDelete(review.id)}
                             disabled={actionLoading === review.id}

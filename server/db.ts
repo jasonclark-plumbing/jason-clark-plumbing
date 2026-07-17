@@ -75,6 +75,60 @@ export async function getPendingReviews(): Promise<Review[]> {
   }
 }
 
+export async function getAllReviews(options?: {
+  status?: "pending" | "approved" | "rejected" | "all";
+  sortBy?: "date" | "rating" | "name";
+  sortOrder?: "asc" | "desc";
+  searchQuery?: string;
+}): Promise<Review[]> {
+  const db = await getDb();
+  if (!db) return [];
+
+  try {
+    let results: Review[] = [];
+
+    // Apply status filter
+    if (options?.status && options.status !== "all") {
+      results = await db.select().from(reviews).where(eq(reviews.status, options.status));
+    } else {
+      results = await db.select().from(reviews);
+    }
+
+    // Apply search filter (client-side since we're filtering text)
+    if (options?.searchQuery) {
+      const q = options.searchQuery.toLowerCase();
+      results = results.filter(
+        (r) =>
+          r.customerName.toLowerCase().includes(q) ||
+          r.customerEmail.toLowerCase().includes(q) ||
+          r.text.toLowerCase().includes(q)
+      );
+    }
+
+    // Apply sorting
+    if (options?.sortBy) {
+      results.sort((a, b) => {
+        let compareValue = 0;
+
+        if (options.sortBy === "date") {
+          compareValue = new Date(a.submittedAt).getTime() - new Date(b.submittedAt).getTime();
+        } else if (options.sortBy === "rating") {
+          compareValue = a.rating - b.rating;
+        } else if (options.sortBy === "name") {
+          compareValue = a.customerName.localeCompare(b.customerName);
+        }
+
+        return options.sortOrder === "asc" ? compareValue : -compareValue;
+      });
+    }
+
+    return results;
+  } catch (error) {
+    console.error("[Database] Failed to get all reviews:", error);
+    return [];
+  }
+}
+
 export async function getReviewById(reviewId: number): Promise<Review | null> {
   const db = await getDb();
   if (!db) return null;

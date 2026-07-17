@@ -15,6 +15,7 @@ import {
   getAdminByEmail,
   createAdmin,
   getReviewById,
+  getAllReviews,
 } from "./db";
 
 export const appRouter = router({
@@ -129,6 +130,41 @@ export const appRouter = router({
         });
       }
     }),
+
+    // Admin: Get all reviews with filtering and sorting
+    getAll: protectedProcedure
+      .input(
+        z.object({
+          status: z.enum(["all", "pending", "approved", "rejected"]).optional().default("all"),
+          sortBy: z.enum(["date", "rating", "name"]).optional().default("date"),
+          sortOrder: z.enum(["asc", "desc"]).optional().default("desc"),
+          searchQuery: z.string().optional(),
+        })
+      )
+      .query(async ({ input, ctx }) => {
+        if (ctx.user?.role !== "admin") {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Admin access required",
+          });
+        }
+
+        try {
+          const reviews = await getAllReviews({
+            status: input.status as "pending" | "approved" | "rejected" | "all",
+            sortBy: input.sortBy as "date" | "rating" | "name",
+            sortOrder: input.sortOrder as "asc" | "desc",
+            searchQuery: input.searchQuery,
+          });
+          return reviews;
+        } catch (error) {
+          console.error("[tRPC] Get all reviews error:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to fetch reviews",
+          });
+        }
+      }),
 
     // Admin: Approve review
     approve: protectedProcedure
