@@ -5,7 +5,7 @@
  * Fade-up entrance animations staggered per element.
  */
 
-import { Phone, MessageCircle, ChevronDown } from "lucide-react";
+import { Phone, MessageCircle, ChevronDown, Mail } from "lucide-react";
 
 export default function HeroSection() {
   const scrollToServices = () => {
@@ -137,33 +137,34 @@ export default function HeroSection() {
 
         {/* CTA buttons */}
         <div
-          className="flex flex-col sm:flex-row items-center gap-3 mt-2 animate-fade-up w-full max-w-xl"
+          className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-2 animate-fade-up w-full"
           style={{ animationDelay: "400ms" }}
         >
           <a
             href="tel:01480769129"
-            className="btn-gold w-full sm:w-auto justify-center text-center min-h-12"
-            aria-label="Call Jason Clark Plumbing now"
+            className="btn-ghost-gold w-full sm:w-48 h-12 flex items-center justify-center gap-2"
+            aria-label="Call Jason Clark Plumbing now on 01480 769129"
           >
             <Phone size={15} />
-            Call now
+            <span>01480 769129</span>
           </a>
           <a
             href="https://wa.me/447767910713"
             target="_blank"
             rel="noopener noreferrer"
-            className="btn-ghost-gold w-full sm:w-auto justify-center text-center min-h-12"
+            className="btn-ghost-gold w-full sm:w-48 h-12 flex items-center justify-center gap-2"
             aria-label="Message Jason Clark Plumbing on WhatsApp"
           >
             <MessageCircle size={15} />
-            WhatsApp
+            <span>WhatsApp</span>
           </a>
           <a
             href="#contact"
-            className="w-full sm:w-auto text-center text-sm font-semibold uppercase tracking-[0.16em] text-[#F0EAD6] hover:text-[#C9A84C] transition-colors"
-            style={{ fontFamily: "'Montserrat', sans-serif" }}
+            className="btn-ghost-gold w-full sm:w-48 h-12 flex items-center justify-center gap-2"
+            aria-label="Request a callback from Jason Clark Plumbing"
           >
-            Request a callback
+            <Mail size={15} />
+            <span>Request callback</span>
           </a>
         </div>
 
