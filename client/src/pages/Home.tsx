@@ -12,10 +12,11 @@ import WhyUsSection from "@/components/WhyUsSection";
 import ContactSection from "@/components/ContactSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import Footer from "@/components/Footer";
+import MobileQuickActions from "@/components/MobileQuickActions";
 
 export default function Home() {
   return (
-    <div className="min-h-screen" style={{ background: "#0C0C0C" }}>
+    <div className="min-h-screen pb-24 md:pb-0" style={{ background: "#0C0C0C" }}>
       <Navbar />
       <HeroSection />
       <ServicesSection />
@@ -24,6 +25,7 @@ export default function Home() {
       <TestimonialsSection />
       <ContactSection />
       <Footer />
+      <MobileQuickActions />
     </div>
   );
 }

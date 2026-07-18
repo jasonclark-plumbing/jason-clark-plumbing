@@ -106,10 +106,7 @@ export default function AboutSection() {
                 marginBottom: "1.25rem",
               }}
             >
-              Jason Clark is a City &amp; Guilds qualified plumber bringing professional,
-              reliable service to the local area. As an ACIPHE Associate Member, Jason upholds
-              the highest professional standards in every job — from a simple tap repair to a
-              complete bathroom renovation.
+              Jason Clark is a City &amp; Guilds qualified plumber serving Huntingdon and nearby areas with dependable plumbing work for homes and properties. As an ACIPHE Associate Member, Jason brings professional standards and a careful approach to every job, from a simple tap repair to a full bathroom installation.
             </p>
             <p
               style={{

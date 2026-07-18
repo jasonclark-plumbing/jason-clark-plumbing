@@ -200,9 +200,7 @@ export default function ServicesSection() {
               lineHeight: 1.8,
             }}
           >
-            From emergency repairs to full bathroom installations, Jason Clark Plumbing
-            delivers skilled, reliable work across a comprehensive range of plumbing services.
-            Please note: gas work and boiler servicing are not currently offered.
+            Jason Clark Plumbing provides dependable plumbing services for homes and properties in Huntingdon and the surrounding area, including emergency call-outs, general repairs, bathroom installations and more. Gas work and boiler servicing are not currently offered.
           </p>
         </div>
 

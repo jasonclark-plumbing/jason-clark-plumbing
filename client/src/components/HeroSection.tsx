@@ -131,27 +131,39 @@ export default function HeroSection() {
               }}
             >
               City &amp; Guilds Qualified &nbsp;·&nbsp; ACIPHE Associate Member<br />
-              <span style={{ fontSize: "0.875rem", color: "#9A8A6A" }}>Huntingdon &amp; Surrounding Areas</span>
+              <span style={{ fontSize: "0.875rem", color: "#9A8A6A" }}>Plumbing services in Huntingdon and surrounding areas</span>
             </p>
         </div>
 
         {/* CTA buttons */}
         <div
-          className="flex flex-col sm:flex-row items-center gap-4 mt-2 animate-fade-up"
+          className="flex flex-col sm:flex-row items-center gap-3 mt-2 animate-fade-up w-full max-w-xl"
           style={{ animationDelay: "400ms" }}
         >
-          <a href="tel:01480769129" className="btn-gold">
+          <a
+            href="tel:01480769129"
+            className="btn-gold w-full sm:w-auto justify-center text-center min-h-12"
+            aria-label="Call Jason Clark Plumbing now"
+          >
             <Phone size={15} />
-            Call 01480 769129
+            Call now
           </a>
           <a
             href="https://wa.me/447767910713"
             target="_blank"
             rel="noopener noreferrer"
-            className="btn-ghost-gold"
+            className="btn-ghost-gold w-full sm:w-auto justify-center text-center min-h-12"
+            aria-label="Message Jason Clark Plumbing on WhatsApp"
           >
             <MessageCircle size={15} />
-            WhatsApp Us
+            WhatsApp
+          </a>
+          <a
+            href="#contact"
+            className="w-full sm:w-auto text-center text-sm font-semibold uppercase tracking-[0.16em] text-[#F0EAD6] hover:text-[#C9A84C] transition-colors"
+            style={{ fontFamily: "'Montserrat', sans-serif" }}
+          >
+            Request a callback
           </a>
         </div>
 

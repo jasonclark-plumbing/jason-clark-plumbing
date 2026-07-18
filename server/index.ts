@@ -55,9 +55,22 @@ async function startServer() {
 
   app.use(express.static(staticPath));
 
-  // Handle client-side routing - serve index.html for all routes (MUST be last)
-  app.get("*", (_req, res) => {
-    res.sendFile(path.join(staticPath, "index.html"));
+  // Handle client-side routing for known public routes and return a real 404 for unknown paths.
+  app.get("*", (req, res, next) => {
+    const pathname = req.path;
+
+    if (pathname.startsWith("/api/") || pathname.startsWith("/__manus__/") || pathname.startsWith("/manus-storage")) {
+      return next();
+    }
+
+    const knownRoutes = ["/", "/reviews", "/admin/login", "/admin/dashboard", "/404"];
+    const hasFileExtension = /\.[a-zA-Z0-9]+$/.test(pathname);
+
+    if (knownRoutes.includes(pathname) || !hasFileExtension) {
+      return res.sendFile(path.join(staticPath, "index.html"));
+    }
+
+    return res.status(404).type("text/plain").send("404 - Page not found");
   });
 
   const port = process.env.PORT || 3000;

@@ -131,6 +131,9 @@ export default function ContactSection() {
           >
             Whether you have an emergency or simply want to discuss a project,
             Jason is happy to help. Get in touch for a free, no-obligation quote.
+            <span className="mt-3 block text-[#F0EAD6]">
+              Fast response for urgent plumbing issues and planned jobs alike.
+            </span>
           </p>
         </div>
 
