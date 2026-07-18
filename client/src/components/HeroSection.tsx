@@ -5,7 +5,7 @@
  * Fade-up entrance animations staggered per element.
  */
 
-import { Phone, MessageCircle, ChevronDown } from "lucide-react";
+import { Phone, MessageCircle, ChevronDown, Mail } from "lucide-react";
 
 export default function HeroSection() {
   const scrollToServices = () => {
@@ -131,27 +131,40 @@ export default function HeroSection() {
               }}
             >
               City &amp; Guilds Qualified &nbsp;·&nbsp; ACIPHE Associate Member<br />
-              <span style={{ fontSize: "0.875rem", color: "#9A8A6A" }}>Huntingdon &amp; Surrounding Areas</span>
+              <span style={{ fontSize: "0.875rem", color: "#9A8A6A" }}>Plumbing services in Huntingdon and surrounding areas</span>
             </p>
         </div>
 
         {/* CTA buttons */}
         <div
-          className="flex flex-col sm:flex-row items-center gap-4 mt-2 animate-fade-up"
+          className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-2 animate-fade-up w-full"
           style={{ animationDelay: "400ms" }}
         >
-          <a href="tel:01480769129" className="btn-gold">
+          <a
+            href="tel:01480769129"
+            className="btn-ghost-gold w-full sm:w-48 h-12 flex items-center justify-center gap-2"
+            aria-label="Call Jason Clark Plumbing now on 01480 769129"
+          >
             <Phone size={15} />
-            Call 01480 769129
+            <span>01480 769129</span>
           </a>
           <a
             href="https://wa.me/447767910713"
             target="_blank"
             rel="noopener noreferrer"
-            className="btn-ghost-gold"
+            className="btn-ghost-gold w-full sm:w-48 h-12 flex items-center justify-center gap-2"
+            aria-label="Message Jason Clark Plumbing on WhatsApp"
           >
             <MessageCircle size={15} />
-            WhatsApp Us
+            <span>WhatsApp</span>
+          </a>
+          <a
+            href="#contact"
+            className="btn-ghost-gold w-full sm:w-48 h-12 flex items-center justify-center gap-2"
+            aria-label="Request a callback from Jason Clark Plumbing"
+          >
+            <Mail size={15} />
+            <span>Request callback</span>
           </a>
         </div>
 

@@ -1,5 +1,16 @@
 import rateLimit from "express-rate-limit";
 
+function getClientIdentifier(req: { headers: Record<string, string | string[] | undefined>; ip?: string }): string {
+  const forwardedFor = req.headers["x-forwarded-for"];
+  if (typeof forwardedFor === "string") {
+    return forwardedFor.split(",")[0].trim();
+  }
+  if (Array.isArray(forwardedFor) && forwardedFor.length > 0) {
+    return forwardedFor[0].trim();
+  }
+  return req.ip || "unknown";
+}
+
 /**
  * Rate limiter for review submissions
  * Allows 5 reviews per IP address per 24 hours
@@ -14,14 +25,7 @@ export const reviewRateLimiter = rateLimit({
     // Skip rate limiting for admin users (if needed)
     return false;
   },
-  keyGenerator: (req) => {
-    // Use X-Forwarded-For header if behind a proxy, otherwise use req.ip
-    const forwardedFor = req.headers["x-forwarded-for"];
-    if (typeof forwardedFor === "string") {
-      return forwardedFor.split(",")[0].trim();
-    }
-    return req.ip || "unknown";
-  },
+  keyGenerator: (req) => getClientIdentifier(req),
   handler: (req, res) => {
     res.status(429).json({
       error: {
