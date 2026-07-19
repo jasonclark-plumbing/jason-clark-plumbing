@@ -31,7 +31,7 @@ const SERVICES = [
     title: "Radiator Installation & Repair",
     description:
       "New radiator installations, replacements, bleeding, and balancing to keep your home warm and your heating system running at its best.",
-    image: "https://d2xsxph8kpxj0f.cloudfront.net/310519663746061583/JZGjRQ39WvQmto8RQcSvRP/radiator-installation-v2-HKnMbktFqsjVA8WeimrMHY.webp",
+    image: "https://d2xsxph8kpxj0f.cloudfront.net/310519663746061583/JZGjRQ39WvQmto8RQcSvRP/radiator-installation-v3-JZHgWuNViwCGsvdm55oGCm.webp",
     featured: false,
   },
   {
@@ -46,8 +46,8 @@ const SERVICES = [
     icon: <AlertTriangle size={22} />,
     title: "Blocked Sinks & Drains",
     description:
-      "Stubborn blockages in sinks, baths, showers, and drains cleared quickly and efficiently. Jason uses professional techniques to restore full flow without damage to your pipework.",
-    image: "https://d2xsxph8kpxj0f.cloudfront.net/310519663746061583/JZGjRQ39WvQmto8RQcSvRP/blocked-drains-v2-5e9KozF9yE8whQJavUSCiz.webp",
+      "Stubborn blockages in sinks, baths, showers, and drains cleared quickly and efficiently.",
+    image: "https://d2xsxph8kpxj0f.cloudfront.net/310519663746061583/JZGjRQ39WvQmto8RQcSvRP/blocked-drains-v3-Thfy36tMvTrpVitkMrgiuW.webp",
     featured: false,
   },
   {
@@ -60,10 +60,10 @@ const SERVICES = [
   },
   {
     icon: <Droplets size={22} />,
-    title: "Leak Detection & Repair",
+    title: "Leak Repair",
     description:
-      "Identifying and fixing hidden leaks before they cause structural damage. Specialist trace-and-access work with minimal disruption to your property.",
-    image: "https://d2xsxph8kpxj0f.cloudfront.net/310519663746061583/JZGjRQ39WvQmto8RQcSvRP/leak-detection-v2-JrjYyhDQTz8Qp5enVo3W3M.webp",
+      "Identifying and fixing hidden leaks before they cause damage. Quick and efficient repairs to restore your plumbing to full working order.",
+    image: "https://d2xsxph8kpxj0f.cloudfront.net/310519663746061583/JZGjRQ39WvQmto8RQcSvRP/leak-repair-v3-Q5uiwp6nZhMBjMySNwCJ9T.webp",
     featured: false,
   },
   {
@@ -79,7 +79,7 @@ const SERVICES = [
     title: "Pipework & Re-piping",
     description:
       "New pipework runs, re-piping older properties, and upgrading from lead or iron pipes to modern copper or plastic systems.",
-    image: "https://d2xsxph8kpxj0f.cloudfront.net/310519663746061583/JZGjRQ39WvQmto8RQcSvRP/pipework-repining-v2-6qM8PHXgaNcxJY5RohaZDB.webp",
+    image: "https://d2xsxph8kpxj0f.cloudfront.net/310519663746061583/JZGjRQ39WvQmto8RQcSvRP/pipework-v3-9BrmWsXNxrYfGbjsgddrBo.webp",
     featured: false,
   },
 ];
