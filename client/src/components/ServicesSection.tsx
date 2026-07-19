@@ -79,7 +79,7 @@ const SERVICES = [
     title: "Pipework & Re-piping",
     description:
       "New pipework runs, re-piping older properties, and upgrading from lead or iron pipes to modern copper or plastic systems.",
-    image: "https://d2xsxph8kpxj0f.cloudfront.net/310519663746061583/JZGjRQ39WvQmto8RQcSvRP/pipework-copper-joints-fm3LHPcCNqJw9kXFWnEveU.webp",
+    image: "https://d2xsxph8kpxj0f.cloudfront.net/310519663746061583/JZGjRQ39WvQmto8RQcSvRP/pipework-realistic-Vwg7XuX7pMsBC72mhcJ2X2.webp",
     featured: false,
   },
 ];
