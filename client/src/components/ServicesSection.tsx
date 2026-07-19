@@ -31,7 +31,7 @@ const SERVICES = [
     title: "Radiator Installation & Repair",
     description:
       "New radiator installations, replacements, bleeding, and balancing to keep your home warm and your heating system running at its best.",
-    image: null,
+    image: "https://d2xsxph8kpxj0f.cloudfront.net/310519663746061583/JZGjRQ39WvQmto8RQcSvRP/radiator-installation-Erk5aY3XdRAUAEvo8ANAh5.webp",
     featured: false,
   },
   {
@@ -47,7 +47,7 @@ const SERVICES = [
     title: "Blocked Sinks & Drains",
     description:
       "Stubborn blockages in sinks, baths, showers, and drains cleared quickly and efficiently. Jason uses professional techniques to restore full flow without damage to your pipework.",
-    image: null,
+    image: "https://d2xsxph8kpxj0f.cloudfront.net/310519663746061583/JZGjRQ39WvQmto8RQcSvRP/blocked-drains-iAqDKitcXarbAf576aZQYa.webp",
     featured: false,
   },
   {
@@ -55,7 +55,7 @@ const SERVICES = [
     title: "Outside Tap Installation",
     description:
       "Professional installation of outdoor taps and garden water points. Perfect for gardens, patios, and utility areas. Frost-proof fittings and proper drainage included.",
-    image: null,
+    image: "https://d2xsxph8kpxj0f.cloudfront.net/310519663746061583/JZGjRQ39WvQmto8RQcSvRP/outside-tap-installation-DdTjzdW3LTwbh8EqSW7cEd.webp",
     featured: false,
   },
   {
@@ -63,7 +63,7 @@ const SERVICES = [
     title: "Leak Detection & Repair",
     description:
       "Identifying and fixing hidden leaks before they cause structural damage. Specialist trace-and-access work with minimal disruption to your property.",
-    image: null,
+    image: "https://d2xsxph8kpxj0f.cloudfront.net/310519663746061583/JZGjRQ39WvQmto8RQcSvRP/leak-detection-3w4vRGm7zgnen3gLLArSFu.webp",
     featured: false,
   },
   {
@@ -71,7 +71,7 @@ const SERVICES = [
     title: "Shower Installations",
     description:
       "Mixer and power shower installations, including enclosure fitting and all associated plumbing connections.",
-    image: null,
+    image: "https://d2xsxph8kpxj0f.cloudfront.net/310519663746061583/JZGjRQ39WvQmto8RQcSvRP/shower-installation-HnG2tscQQ8FmiqHMMLo2TN.webp",
     featured: false,
   },
   {
@@ -79,7 +79,7 @@ const SERVICES = [
     title: "Pipework & Re-piping",
     description:
       "New pipework runs, re-piping older properties, and upgrading from lead or iron pipes to modern copper or plastic systems.",
-    image: null,
+    image: "https://d2xsxph8kpxj0f.cloudfront.net/310519663746061583/JZGjRQ39WvQmto8RQcSvRP/pipework-repining-gRebz9oVJaBzDMVfiSrwyh.webp",
     featured: false,
   },
 ];
