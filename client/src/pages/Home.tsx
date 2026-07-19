@@ -6,6 +6,7 @@
 
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
+import AreasCoveredSection from "@/components/AreasCoveredSection";
 import ServicesSection from "@/components/ServicesSection";
 import AboutSection from "@/components/AboutSection";
 import WhyUsSection from "@/components/WhyUsSection";
@@ -20,6 +21,7 @@ export default function Home() {
     <div className="min-h-screen pb-24 md:pb-0" style={{ background: "#0C0C0C" }}>
       <Navbar />
       <HeroSection />
+      <AreasCoveredSection />
       <ServicesSection />
       <AboutSection />
       <WhyUsSection />
