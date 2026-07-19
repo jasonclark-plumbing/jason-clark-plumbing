@@ -63,7 +63,7 @@ const SERVICES = [
     title: "Leak Repair",
     description:
       "Identifying and fixing hidden leaks before they cause damage. Quick and efficient repairs to restore your plumbing to full working order.",
-    image: "https://d2xsxph8kpxj0f.cloudfront.net/310519663746061583/JZGjRQ39WvQmto8RQcSvRP/leak-repair-v3-Q5uiwp6nZhMBjMySNwCJ9T.webp",
+    image: "https://d2xsxph8kpxj0f.cloudfront.net/310519663746061583/JZGjRQ39WvQmto8RQcSvRP/leak-repair-underground-ZyG62o8AsyozaqjtPUz3tv.webp",
     featured: false,
   },
   {
