@@ -112,6 +112,9 @@
 
 ## Known Limitations & Future Enhancements
 
+### Known Issues & Technical Debt
+- **IPv6 Rate Limiting** - The rate limiter in `server/_core/rateLimit.ts` uses a custom `keyGenerator` that doesn't use the `ipKeyGenerator` helper from express-rate-limit. This could allow IPv6 users to bypass the 5-review-per-24-hours limit. Consider updating to use the built-in `ipKeyGenerator` for proper IPv6 support. (Non-critical, low impact) - Noted during pre-deployment check on 2026-07-18
+
 ### Future Feature Enhancements (Not Required for MVP)
 - [ ] Vitest unit tests for tRPC procedures
 - [ ] Integration tests for review workflow
