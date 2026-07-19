@@ -1,9 +1,53 @@
-import { testimonials } from "@/data/testimonials";
+import { useEffect, useState } from "react";
 import { Link } from "wouter";
 
+interface Review {
+  id: string;
+  customerName: string;
+  text: string;
+  rating: number;
+  submittedAt: string;
+}
+
 export default function TestimonialsSection() {
-  // Get the most recent testimonial
-  const featuredTestimonial = testimonials[0];
+  const [latestReview, setLatestReview] = useState<Review | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchLatestReview = async () => {
+      try {
+        const response = await fetch("/api/trpc/reviews.getApproved");
+        const data = await response.json();
+        
+        if (data.result?.data && data.result.data.length > 0) {
+          // Get the most recent review (last in the array since they're ordered ascending)
+          const latest = data.result.data[data.result.data.length - 1];
+          setLatestReview({
+            id: latest.id,
+            customerName: latest.customerName,
+            text: latest.text,
+            rating: latest.rating,
+            submittedAt: latest.submittedAt,
+          });
+        }
+      } catch (error) {
+        console.error("Failed to fetch latest review:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchLatestReview();
+  }, []);
+
+  // Use latest review from database, or fallback to placeholder
+  const featuredTestimonial = latestReview || {
+    id: "placeholder",
+    customerName: "Customer Review",
+    text: "Loading latest customer review...",
+    rating: 5,
+    submittedAt: new Date().toISOString(),
+  };
 
   return (
     <section className="bg-black text-cream py-20 px-4">
@@ -24,17 +68,17 @@ export default function TestimonialsSection() {
 
             {/* Testimonial Text */}
             <p className="text-xl text-cream mb-6 leading-relaxed italic">
-              {featuredTestimonial.text}
+              {isLoading ? "Loading latest review..." : featuredTestimonial.text}
             </p>
 
             {/* Customer Info */}
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gold font-playfair text-lg font-semibold">
-                  {featuredTestimonial.name}
+                  {featuredTestimonial.customerName}
                 </p>
                 <p className="text-cream/60 text-sm">
-                  {new Date(featuredTestimonial.date).toLocaleDateString(
+                  {new Date(featuredTestimonial.submittedAt).toLocaleDateString(
                     "en-GB",
                     {
                       year: "numeric",
@@ -46,7 +90,7 @@ export default function TestimonialsSection() {
 
               {/* Star Rating */}
               <div className="flex gap-1">
-                {[...Array(5)].map((_, i) => (
+                {[...Array(featuredTestimonial.rating)].map((_, i) => (
                   <span key={i} className="text-gold text-2xl">
                     ★
                   </span>
