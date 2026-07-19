@@ -9,8 +9,9 @@ import HeroSection from "@/components/HeroSection";
 import ServicesSection from "@/components/ServicesSection";
 import AboutSection from "@/components/AboutSection";
 import WhyUsSection from "@/components/WhyUsSection";
-import ContactSection from "@/components/ContactSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
+import ContactSection from "@/components/ContactSection";
+import TrustpilotSection from "@/components/TrustpilotSection";
 import Footer from "@/components/Footer";
 import MobileQuickActions from "@/components/MobileQuickActions";
 
@@ -24,6 +25,7 @@ export default function Home() {
       <WhyUsSection />
       <TestimonialsSection />
       <ContactSection />
+      <TrustpilotSection />
       <Footer />
       <MobileQuickActions />
     </div>
