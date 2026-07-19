@@ -38,7 +38,7 @@ const SERVICES = [
     icon: <Bath size={22} />,
     title: "Bathroom Installations",
     description:
-      "Full bathroom suite installations — from planning and strip-out to fitting, tiling, and final connections. A complete, professional finish every time.",
+      "Bath, sink, and toilet replacements — professional removal and installation of bathroom fixtures with all associated plumbing connections.",
     image: "https://d2xsxph8kpxj0f.cloudfront.net/310519663746061583/JZGjRQ39WvQmto8RQcSvRP/bathroom-install-SLCaLJdCJEteJX296cS4tc.webp",
     featured: false,
   },
@@ -70,7 +70,7 @@ const SERVICES = [
     icon: <ShowerHead size={22} />,
     title: "Shower Installations",
     description:
-      "Electric, mixer, and power shower installations, including enclosure fitting and all associated plumbing connections.",
+      "Mixer and power shower installations, including enclosure fitting and all associated plumbing connections.",
     image: null,
     featured: false,
   },
