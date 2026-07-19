@@ -23,7 +23,7 @@ const SERVICES = [
     title: "General Plumbing Repairs",
     description:
       "From dripping taps and leaking pipes to faulty valves and running cisterns, Jason handles all general plumbing repairs with care and precision.",
-    image: "https://d2xsxph8kpxj0f.cloudfront.net/310519663746061583/JZGjRQ39WvQmto8RQcSvRP/pipe-repair-fRGhh9bjJQAPj7Lw8ajZBo.webp",
+    image: "/manus-storage/general-plumbing-tap_7a3de88d.jpg",
     featured: false,
   },
   {
