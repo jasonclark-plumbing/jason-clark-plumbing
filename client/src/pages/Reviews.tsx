@@ -24,8 +24,7 @@ interface Reply {
 export default function Reviews() {
   const [approvedReviews, setApprovedReviews] = useState<DatabaseReview[]>([]);
   const [replies, setReplies] = useState<Record<number, Reply[]>>({});
-  const [loadingReplies, setLoadingReplies] = useState<Set<number>>(new Set());
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -50,8 +49,8 @@ export default function Reviews() {
           [reviewId]: data.result.data,
         }));
       }
-    } catch (err) {
-      console.error("Error fetching replies:", err);
+    } catch {
+      // Preview mode may not have the API backend running.
     }
   };
 
@@ -68,9 +67,7 @@ export default function Reviews() {
         },
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
-      }
+      if (!response.ok) return;
 
       const data = await response.json();
       
@@ -82,9 +79,8 @@ export default function Reviews() {
       for (const review of reviews) {
         fetchReplies(review.id);
       }
-    } catch (err) {
-      console.error("Error fetching reviews:", err);
-      // Don't show error to user - just use static testimonials
+    } catch {
+      // Don't show an error in preview; static testimonials remain visible.
       setError("");
     } finally {
       setLoading(false);
@@ -142,7 +138,7 @@ export default function Reviews() {
       {/* Testimonials Grid */}
       <div className="max-w-4xl mx-auto px-4">
         <div className="space-y-6">
-          {loading ? (
+          {loading && approvedReviews.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-cream/60">Loading reviews...</p>
             </div>

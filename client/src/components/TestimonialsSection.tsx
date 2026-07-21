@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
+import { testimonials } from "@/data/testimonials";
 
 interface Review {
   id: string;
@@ -12,11 +13,16 @@ interface Review {
 export default function TestimonialsSection() {
   const [latestReview, setLatestReview] = useState<Review | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const fallbackReview = testimonials[0];
 
   useEffect(() => {
     const fetchLatestReview = async () => {
       try {
         const response = await fetch("/api/trpc/reviews.getApproved");
+        if (!response.ok) {
+          return;
+        }
+
         const data = await response.json();
         
         if (data.result?.data && data.result.data.length > 0) {
@@ -30,8 +36,6 @@ export default function TestimonialsSection() {
             submittedAt: latest.submittedAt,
           });
         }
-      } catch (error) {
-        console.error("Failed to fetch latest review:", error);
       } finally {
         setIsLoading(false);
       }
@@ -42,11 +46,11 @@ export default function TestimonialsSection() {
 
   // Use latest review from database, or fallback to placeholder
   const featuredTestimonial = latestReview || {
-    id: "placeholder",
-    customerName: "Customer Review",
-    text: "Loading latest customer review...",
+    id: fallbackReview.id,
+    customerName: fallbackReview.name,
+    text: fallbackReview.text,
     rating: 5,
-    submittedAt: new Date().toISOString(),
+    submittedAt: fallbackReview.date,
   };
 
   return (

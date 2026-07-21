@@ -106,20 +106,5 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
-    <!-- Google Analytics 4 -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=%VITE_GA4_ID%"></script>
-    <script>
-      if (window.location.hostname !== 'localhost' && '%VITE_GA4_ID%' !== '%VITE_GA4_ID%') {
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', '%VITE_GA4_ID%', { 'anonymize_ip': true });
-      }
-    </script>
-    <!-- Umami Analytics (optional fallback) -->
-    <script
-      defer
-      src="%VITE_ANALYTICS_ENDPOINT%/umami"
-      data-website-id="%VITE_ANALYTICS_WEBSITE_ID%"></script>
   </body>
 </html>
