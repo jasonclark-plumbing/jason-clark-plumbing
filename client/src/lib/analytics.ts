@@ -15,3 +15,10 @@ export function trackContactClick(method: "phone" | "whatsapp" | "email" | "call
     placement,
   });
 }
+
+export function trackGenerateLead(channel: "mailto" | "phone" | "whatsapp" | "callback", placement: string) {
+  trackEvent("generate_lead", {
+    channel,
+    placement,
+  });
+}
