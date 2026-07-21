@@ -99,8 +99,17 @@
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
+      const gaDebugParam = new URLSearchParams(window.location.search).get('ga_debug');
+      if (gaDebugParam === '1') {
+        localStorage.setItem('ga_debug', '1');
+      } else if (gaDebugParam === '0') {
+        localStorage.removeItem('ga_debug');
+      }
+      const gaDebugEnabled = localStorage.getItem('ga_debug') === '1';
       gtag('js', new Date());
-      gtag('config', 'G-WT2Y2HQCGC');
+      gtag('config', 'G-WT2Y2HQCGC', {
+        debug_mode: gaDebugEnabled,
+      });
     </script>
   </head>
   <body>
