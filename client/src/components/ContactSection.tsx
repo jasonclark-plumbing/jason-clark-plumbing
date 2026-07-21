@@ -78,7 +78,10 @@ export default function ContactSection() {
       `Name: ${form.name}\nPhone: ${form.phone}\nEmail: ${form.email}\n\nMessage:\n${form.message}`
     );
     trackEvent("contact_form_mailto_submit", { placement: "contact_section" });
-    window.location.href = `mailto:plumbing@jasonclark.online?subject=${subject}&body=${body}`;
+    // Allow analytics dispatch to queue before handing off to mail client.
+    setTimeout(() => {
+      window.location.href = `mailto:plumbing@jasonclark.online?subject=${subject}&body=${body}`;
+    }, 150);
     setSubmitted(true);
   };
 
