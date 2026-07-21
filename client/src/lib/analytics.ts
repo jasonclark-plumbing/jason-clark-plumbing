@@ -10,10 +10,20 @@ export function trackEvent(eventName: string, params: EventParams = {}) {
 
   // Ensure lead reporting is emitted for enquiry submissions.
   if (eventName === "contact_form_mailto_submit") {
-    gtag("event", "generate_lead", {
+    const leadParams = {
       channel: "mailto",
       placement: typeof params.placement === "string" ? params.placement : "contact_section",
-    });
+    };
+
+    gtag("event", "generate_lead", leadParams);
+
+    const dataLayer = (window as Window & { dataLayer?: unknown[] }).dataLayer;
+    if (Array.isArray(dataLayer)) {
+      dataLayer.push({
+        event: "generate_lead",
+        ...leadParams,
+      });
+    }
   }
 }
 
