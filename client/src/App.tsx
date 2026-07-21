@@ -94,6 +94,26 @@ function SeoHead() {
         `${CANONICAL_DOMAIN}${normalizedPath === "/" ? "" : normalizedPath}`
       );
     }
+
+    const ogTitleTag = document.querySelector('meta[property="og:title"]');
+    if (ogTitleTag) {
+      ogTitleTag.setAttribute("content", meta.title);
+    }
+
+    const ogDescriptionTag = document.querySelector('meta[property="og:description"]');
+    if (ogDescriptionTag) {
+      ogDescriptionTag.setAttribute("content", meta.description);
+    }
+
+    const twitterTitleTag = document.querySelector('meta[name="twitter:title"]');
+    if (twitterTitleTag) {
+      twitterTitleTag.setAttribute("content", meta.title);
+    }
+
+    const twitterDescriptionTag = document.querySelector('meta[name="twitter:description"]');
+    if (twitterDescriptionTag) {
+      twitterDescriptionTag.setAttribute("content", meta.description);
+    }
   }, [location]);
 
   return null;
