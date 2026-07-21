@@ -79,14 +79,6 @@ export default function ContactSection() {
     );
     trackEvent("contact_form_mailto_submit", { placement: "contact_section" });
     trackEvent("generate_lead", { channel: "mailto", placement: "contact_section" });
-    const dataLayer = (window as Window & { dataLayer?: unknown[] }).dataLayer;
-    if (Array.isArray(dataLayer)) {
-      dataLayer.push({
-        event: "generate_lead",
-        channel: "mailto",
-        placement: "contact_section",
-      });
-    }
     // Allow analytics dispatch to queue before handing off to mail client.
     setTimeout(() => {
       window.location.href = `mailto:plumbing@jasonclark.online?subject=${subject}&body=${body}`;

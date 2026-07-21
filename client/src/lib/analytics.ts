@@ -3,6 +3,16 @@ type EventParams = Record<string, string | number | boolean | undefined>;
 export function trackEvent(eventName: string, params: EventParams = {}) {
   if (typeof window === "undefined") return;
 
+  const gtag = (window as Window & { gtag?: (...args: unknown[]) => void }).gtag;
+  if (typeof gtag === "function") {
+    try {
+      gtag("event", eventName, params);
+      return;
+    } catch {
+      // Fall through to dataLayer fallback for generate_lead below.
+    }
+  }
+
   const dataLayer = (window as Window & { dataLayer?: unknown[] }).dataLayer;
   if (Array.isArray(dataLayer) && eventName === "generate_lead") {
     dataLayer.push({
@@ -10,16 +20,6 @@ export function trackEvent(eventName: string, params: EventParams = {}) {
       ...params,
     });
   }
-
-  const gtag = (window as Window & { gtag?: (...args: unknown[]) => void }).gtag;
-  if (typeof gtag !== "function") return;
-
-  try {
-    gtag("event", eventName, params);
-  } catch {
-    // Keep page flow intact even if analytics transport fails.
-  }
-
 }
 
 export function trackContactClick(method: "phone" | "whatsapp" | "email" | "callback", placement: string) {
