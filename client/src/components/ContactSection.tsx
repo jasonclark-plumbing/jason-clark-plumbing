@@ -7,6 +7,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Phone, MessageCircle, Mail, Facebook, MapPin } from "lucide-react";
+import { trackContactClick, trackEvent } from "@/lib/analytics";
 
 function useInView(threshold = 0.12) {
   const ref = useRef<HTMLDivElement>(null);
@@ -76,6 +77,7 @@ export default function ContactSection() {
     const body = encodeURIComponent(
       `Name: ${form.name}\nPhone: ${form.phone}\nEmail: ${form.email}\n\nMessage:\n${form.message}`
     );
+    trackEvent("contact_form_mailto_submit", { placement: "contact_section" });
     window.location.href = `mailto:plumbing@jasonclark.online?subject=${subject}&body=${body}`;
     setSubmitted(true);
   };
@@ -210,6 +212,11 @@ export default function ContactSection() {
                         target={item.href.startsWith("http") ? "_blank" : undefined}
                         rel="noopener noreferrer"
                         className="hover:text-[#C9A84C] transition-colors"
+                        onClick={() => {
+                          if (item.href?.startsWith("tel:")) trackContactClick("phone", "contact_section");
+                          if (item.href?.includes("wa.me")) trackContactClick("whatsapp", "contact_section");
+                          if (item.href?.startsWith("mailto:")) trackContactClick("email", "contact_section");
+                        }}
                         style={{
                           fontFamily: "'Lora', serif",
                           fontSize: "0.9375rem",
@@ -447,7 +454,11 @@ export default function ContactSection() {
                   }}
                 >
                   Or call directly on{" "}
-                  <a href="tel:01480769129" className="text-[#C9A84C] hover:underline">
+                  <a
+                    href="tel:01480769129"
+                    className="text-[#C9A84C] hover:underline"
+                    onClick={() => trackContactClick("phone", "contact_form_footer")}
+                  >
                     01480 769129
                   </a>
                 </p>

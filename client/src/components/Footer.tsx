@@ -5,6 +5,7 @@
  */
 
 import { Phone, MessageCircle, Mail, Facebook } from "lucide-react";
+import { trackContactClick } from "@/lib/analytics";
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -74,6 +75,11 @@ export default function Footer() {
                   rel="noopener noreferrer"
                   aria-label={item.label}
                   className="w-9 h-9 flex items-center justify-center transition-colors duration-200"
+                  onClick={() => {
+                    if (item.href.startsWith("tel:")) trackContactClick("phone", "footer_social");
+                    if (item.href.includes("wa.me")) trackContactClick("whatsapp", "footer_social");
+                    if (item.href.startsWith("mailto:")) trackContactClick("email", "footer_social");
+                  }}
                   style={{
                     border: "1px solid rgba(201,168,76,0.3)",
                     color: "#9A8A6A",
@@ -176,6 +182,11 @@ export default function Footer() {
                     target={item.href.startsWith("http") ? "_blank" : undefined}
                     rel="noopener noreferrer"
                     className="flex items-center gap-2.5 hover:text-[#C9A84C] transition-colors duration-200"
+                    onClick={() => {
+                      if (item.href.startsWith("tel:")) trackContactClick("phone", "footer_contact");
+                      if (item.href.includes("wa.me")) trackContactClick("whatsapp", "footer_contact");
+                      if (item.href.startsWith("mailto:")) trackContactClick("email", "footer_contact");
+                    }}
                     style={{
                       fontFamily: "'Lora', serif",
                       fontSize: "0.875rem",

@@ -6,6 +6,7 @@
 
 import { useState, useEffect } from "react";
 import { Menu, X, Phone } from "lucide-react";
+import { trackContactClick } from "@/lib/analytics";
 
 const NAV_LINKS = [
   { label: "Home", href: "#home" },
@@ -119,6 +120,7 @@ export default function Navbar() {
             <a
               href="tel:01480769129"
               className="btn-gold text-xs"
+              onClick={() => trackContactClick("phone", "navbar_desktop")}
             >
               <Phone size={13} />
               01480 769129
@@ -165,6 +167,7 @@ export default function Navbar() {
           <a
             href="tel:01480769129"
             className="btn-gold mt-3 text-xs"
+            onClick={() => trackContactClick("phone", "navbar_mobile")}
           >
             <Phone size={13} />
             Call 01480 769129

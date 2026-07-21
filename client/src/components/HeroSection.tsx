@@ -6,6 +6,7 @@
  */
 
 import { Phone, MessageCircle, ChevronDown, Mail } from "lucide-react";
+import { trackContactClick } from "@/lib/analytics";
 
 export default function HeroSection() {
   const scrollToServices = () => {
@@ -146,6 +147,7 @@ export default function HeroSection() {
             href="tel:01480769129"
             className="btn-ghost-gold w-full sm:w-48 h-12 flex items-center justify-center gap-2"
             aria-label="Call Jason Clark Plumbing now on 01480 769129"
+            onClick={() => trackContactClick("phone", "hero_primary")}
           >
             <Phone size={15} />
             <span>01480 769129</span>
@@ -156,6 +158,7 @@ export default function HeroSection() {
             rel="noopener noreferrer"
             className="btn-ghost-gold w-full sm:w-48 h-12 flex items-center justify-center gap-2"
             aria-label="Message Jason Clark Plumbing on WhatsApp"
+            onClick={() => trackContactClick("whatsapp", "hero_primary")}
           >
             <MessageCircle size={15} />
             <span>WhatsApp</span>
@@ -164,6 +167,7 @@ export default function HeroSection() {
             href="#contact"
             className="btn-ghost-gold w-full sm:w-48 h-12 flex items-center justify-center gap-2"
             aria-label="Request a callback from Jason Clark Plumbing"
+            onClick={() => trackContactClick("callback", "hero_primary")}
           >
             <Mail size={15} />
             <span>Request callback</span>
@@ -179,6 +183,7 @@ export default function HeroSection() {
             href="mailto:plumbing@jasonclark.online"
             className="text-[#9A8A6A] hover:text-[#C9A84C] transition-colors text-sm"
             style={{ fontFamily: "'Montserrat', sans-serif", letterSpacing: "0.04em" }}
+            onClick={() => trackContactClick("email", "hero_secondary")}
           >
             plumbing@jasonclark.online
           </a>

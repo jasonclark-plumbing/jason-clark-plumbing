@@ -1,4 +1,5 @@
 import { Phone, MessageCircle, Mail } from "lucide-react";
+import { trackContactClick } from "@/lib/analytics";
 
 export default function MobileQuickActions() {
   return (
@@ -8,6 +9,7 @@ export default function MobileQuickActions() {
           <a
             href="tel:01480769129"
             className="flex items-center justify-center gap-2 rounded-md border border-[#C9A84C] bg-[#C9A84C] px-3 py-3 text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-[#0C0C0C]"
+            onClick={() => trackContactClick("phone", "mobile_quick_actions")}
           >
             <Phone size={14} />
             Call
@@ -17,6 +19,7 @@ export default function MobileQuickActions() {
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center justify-center gap-2 rounded-md border border-[#C9A84C] px-3 py-3 text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-[#C9A84C]"
+            onClick={() => trackContactClick("whatsapp", "mobile_quick_actions")}
           >
             <MessageCircle size={14} />
             WhatsApp
@@ -24,6 +27,7 @@ export default function MobileQuickActions() {
           <a
             href="#contact"
             className="flex items-center justify-center gap-2 rounded-md border border-[rgba(201,168,76,0.3)] bg-[rgba(255,255,255,0.04)] px-3 py-3 text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-[#F0EAD6]"
+            onClick={() => trackContactClick("callback", "mobile_quick_actions")}
           >
             <Mail size={14} />
             Enquire
