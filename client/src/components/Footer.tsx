@@ -110,24 +110,39 @@ export default function Footer() {
             </h4>
             <ul className="flex flex-col gap-2.5">
               {[
-                { label: "Home", href: "#home" },
-                { label: "Services", href: "#services" },
-                { label: "About", href: "#about" },
-                { label: "Why Choose Us", href: "#why-us" },
-                { label: "Contact", href: "#contact" },
+                { label: "Home", href: "#home", isPage: false },
+                { label: "Services", href: "#services", isPage: false },
+                { label: "About", href: "#about", isPage: false },
+                { label: "Why Choose Us", href: "#why-us", isPage: false },
+                { label: "Reviews", href: "/reviews", isPage: true },
+                { label: "Contact", href: "#contact", isPage: false },
               ].map((link) => (
                 <li key={link.label}>
-                  <button
-                    onClick={() => scrollTo(link.href)}
-                    className="text-left hover:text-[#C9A84C] transition-colors duration-200"
-                    style={{
-                      fontFamily: "'Lora', serif",
-                      fontSize: "0.875rem",
-                      color: "#9A8A6A",
-                    }}
-                  >
-                    {link.label}
-                  </button>
+                  {link.isPage ? (
+                    <a
+                      href={link.href}
+                      className="text-left hover:text-[#C9A84C] transition-colors duration-200"
+                      style={{
+                        fontFamily: "'Lora', serif",
+                        fontSize: "0.875rem",
+                        color: "#9A8A6A",
+                      }}
+                    >
+                      {link.label}
+                    </a>
+                  ) : (
+                    <button
+                      onClick={() => scrollTo(link.href)}
+                      className="text-left hover:text-[#C9A84C] transition-colors duration-200"
+                      style={{
+                        fontFamily: "'Lora', serif",
+                        fontSize: "0.875rem",
+                        color: "#9A8A6A",
+                      }}
+                    >
+                      {link.label}
+                    </button>
+                  )}
                 </li>
               ))}
             </ul>
@@ -173,6 +188,35 @@ export default function Footer() {
                 </li>
               ))}
             </ul>
+            <div style={{ marginTop: "1.5rem", paddingTop: "1.5rem", borderTop: "1px solid rgba(201,168,76,0.15)" }}>
+              <p
+                style={{
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontSize: "0.65rem",
+                  fontWeight: 700,
+                  letterSpacing: "0.1em",
+                  textTransform: "uppercase",
+                  color: "#C9A84C",
+                  marginBottom: "0.75rem",
+                }}
+              >
+                Hours
+              </p>
+              <p
+                style={{
+                  fontFamily: "'Lora', serif",
+                  fontSize: "0.875rem",
+                  color: "#9A8A6A",
+                  lineHeight: 1.6,
+                }}
+              >
+                Monday – Friday
+                <br />
+                0700–1800
+                <br />
+                <span style={{ fontSize: "0.8rem", color: "#6A5A4A" }}>No emergency after-hours service</span>
+              </p>
+            </div>
           </div>
         </div>
 
@@ -191,23 +235,32 @@ export default function Footer() {
           >
             © {year} Jason Clark Plumbing. All rights reserved.
           </p>
-          <div className="flex gap-3">
-            {["City & Guilds Qualified", "ACIPHE Associate Member"].map((badge) => (
-              <span
-                key={badge}
-                style={{
-                  fontFamily: "'Montserrat', sans-serif",
-                  fontSize: "0.6rem",
-                  fontWeight: 600,
-                  letterSpacing: "0.1em",
-                  color: "#C9A84C",
-                  border: "1px solid rgba(201,168,76,0.3)",
-                  padding: "3px 8px",
-                }}
-              >
-                {badge}
-              </span>
-            ))}
+          <div className="flex gap-4 flex-wrap justify-center sm:justify-end">
+            <a
+              href="/privacy"
+              style={{
+                fontFamily: "'Montserrat', sans-serif",
+                fontSize: "0.7rem",
+                color: "#9A8A6A",
+                textDecoration: "none",
+              }}
+              className="hover:text-[#C9A84C] transition-colors duration-200"
+            >
+              Privacy Policy
+            </a>
+            <span style={{ color: "rgba(201,168,76,0.2)" }}>|</span>
+            <a
+              href="/terms"
+              style={{
+                fontFamily: "'Montserrat', sans-serif",
+                fontSize: "0.7rem",
+                color: "#9A8A6A",
+                textDecoration: "none",
+              }}
+              className="hover:text-[#C9A84C] transition-colors duration-200"
+            >
+              Terms of Service
+            </a>
           </div>
         </div>
       </div>

@@ -3,6 +3,8 @@ import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
 import Reviews from "@/pages/Reviews";
+import Privacy from "@/pages/Privacy";
+import Terms from "@/pages/Terms";
 import AdminLogin from "@/pages/AdminLogin";
 import AdminDashboard from "@/pages/AdminDashboard";
 import { Route, Switch, useLocation } from "wouter";
@@ -24,6 +26,16 @@ const ROUTE_META: Record<string, { title: string; description: string; robots: s
   "/reviews": {
     title: "Customer Reviews | Jason Clark Plumbing",
     description: "Read recent customer reviews for Jason Clark Plumbing in Huntingdon and surrounding areas.",
+    robots: "index, follow",
+  },
+  "/privacy": {
+    title: "Privacy Policy | Jason Clark Plumbing",
+    description: "Privacy Policy for Jason Clark Plumbing. Learn how we protect your personal data.",
+    robots: "index, follow",
+  },
+  "/terms": {
+    title: "Terms of Service | Jason Clark Plumbing",
+    description: "Terms of Service for Jason Clark Plumbing. Read our service agreement and guarantee.",
     robots: "index, follow",
   },
   "/admin/login": {
@@ -92,6 +104,8 @@ function Router() {
     <Switch>
       <Route path={"/"} component={Home} />
       <Route path={"/reviews"} component={Reviews} />
+      <Route path={"/privacy"} component={Privacy} />
+      <Route path={"/terms"} component={Terms} />
       <Route path={"/admin/login"} component={AdminLogin} />
       <Route path={"/admin/dashboard"} component={AdminDashboard} />
       <Route path={"/404"} component={NotFound} />

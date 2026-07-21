@@ -8,6 +8,7 @@ import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import AreasCoveredSection from "@/components/AreasCoveredSection";
 import ServicesSection from "@/components/ServicesSection";
+import GuaranteeCallout from "@/components/GuaranteeCallout";
 import AboutSection from "@/components/AboutSection";
 import WhyUsSection from "@/components/WhyUsSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
@@ -23,6 +24,7 @@ export default function Home() {
       <HeroSection />
       <AreasCoveredSection />
       <ServicesSection />
+      <GuaranteeCallout />
       <AboutSection />
       <WhyUsSection />
       <TestimonialsSection />

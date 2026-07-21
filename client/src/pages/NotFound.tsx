@@ -1,6 +1,4 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { AlertCircle, Home } from "lucide-react";
+import { Home } from "lucide-react";
 import { useLocation } from "wouter";
 
 export default function NotFound() {
@@ -11,39 +9,148 @@ export default function NotFound() {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100">
-      <Card className="w-full max-w-lg mx-4 shadow-lg border-0 bg-white/80 backdrop-blur-sm">
-        <CardContent className="pt-8 pb-8 text-center">
-          <div className="flex justify-center mb-6">
-            <div className="relative">
-              <div className="absolute inset-0 bg-red-100 rounded-full animate-pulse" />
-              <AlertCircle className="relative h-16 w-16 text-red-500" />
-            </div>
-          </div>
+    <div
+      className="min-h-screen w-full flex items-center justify-center"
+      style={{ background: "#0C0C0C" }}
+    >
+      <div
+        className="w-full max-w-2xl mx-4 p-8 md:p-12 text-center"
+        style={{
+          border: "2px solid rgba(201,168,76,0.3)",
+          background: "rgba(12,12,12,0.8)",
+        }}
+      >
+        {/* Logo/Badge */}
+        <div className="flex justify-center mb-6">
+          <img
+            src="https://d2xsxph8kpxj0f.cloudfront.net/310519663746061583/JZGjRQ39WvQmto8RQcSvRP/jcp-logo-badge-Qtyi525UFR9GYq476rkjba.webp"
+            alt="Jason Clark Plumbing"
+            className="w-20 h-20 object-contain opacity-75"
+          />
+        </div>
 
-          <h1 className="text-4xl font-bold text-slate-900 mb-2">404</h1>
+        {/* 404 Error Code */}
+        <div
+          style={{
+            fontFamily: "'Playfair Display', serif",
+            fontSize: "4rem",
+            fontWeight: 700,
+            color: "#C9A84C",
+            marginBottom: "0.5rem",
+            letterSpacing: "0.1em",
+          }}
+        >
+          404
+        </div>
 
-          <h2 className="text-xl font-semibold text-slate-700 mb-4">
-            Page Not Found
-          </h2>
+        {/* Page Not Found Heading */}
+        <h1
+          style={{
+            fontFamily: "'Playfair Display', serif",
+            fontSize: "2rem",
+            fontWeight: 700,
+            color: "#F0EAD6",
+            marginBottom: "1rem",
+          }}
+        >
+          Page Not Found
+        </h1>
 
-          <p className="text-slate-600 mb-8 leading-relaxed">
-            Sorry, the page you are looking for doesn't exist.
-            <br />
-            It may have been moved or deleted.
+        {/* Description */}
+        <p
+          style={{
+            fontFamily: "'Lora', serif",
+            fontSize: "1rem",
+            color: "#C0B0A0",
+            lineHeight: 1.8,
+            marginBottom: "2rem",
+          }}
+        >
+          Sorry, the page you're looking for doesn't exist. It may have been moved or deleted.
+        </p>
+
+        {/* Gold Divider */}
+        <div
+          style={{
+            height: "1px",
+            background: "rgba(201,168,76,0.3)",
+            margin: "2rem 0",
+          }}
+        />
+
+        {/* Contact Info */}
+        <div style={{ marginBottom: "2rem" }}>
+          <p
+            style={{
+              fontFamily: "'Montserrat', sans-serif",
+              fontSize: "0.85rem",
+              color: "#9A8A6A",
+              marginBottom: "1rem",
+              textTransform: "uppercase",
+              letterSpacing: "0.1em",
+            }}
+          >
+            Looking for something? Contact us:
           </p>
-
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Button
-              onClick={handleGoHome}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <a
+              href="tel:01480769129"
+              style={{
+                fontFamily: "'Lora', serif",
+                color: "#C9A84C",
+                textDecoration: "none",
+                fontSize: "0.95rem",
+              }}
+              className="hover:text-[#E8C96B] transition-colors"
             >
-              <Home className="w-4 h-4 mr-2" />
-              Go Home
-            </Button>
+              01480 769129
+            </a>
+            <span style={{ color: "rgba(201,168,76,0.2)" }}>•</span>
+            <a
+              href="mailto:plumbing@jasonclark.online"
+              style={{
+                fontFamily: "'Lora', serif",
+                color: "#C9A84C",
+                textDecoration: "none",
+                fontSize: "0.95rem",
+              }}
+              className="hover:text-[#E8C96B] transition-colors"
+            >
+              plumbing@jasonclark.online
+            </a>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+
+        {/* Go Home Button */}
+        <button
+          onClick={handleGoHome}
+          className="inline-flex items-center gap-2 px-8 py-3 transition-all duration-200"
+          style={{
+            fontFamily: "'Montserrat', sans-serif",
+            fontSize: "0.9rem",
+            fontWeight: 600,
+            letterSpacing: "0.1em",
+            textTransform: "uppercase",
+            color: "#C9A84C",
+            border: "2px solid rgba(201,168,76,0.5)",
+            background: "transparent",
+            cursor: "pointer",
+          }}
+          onMouseEnter={(e) => {
+            const el = e.currentTarget as HTMLElement;
+            el.style.background = "rgba(201,168,76,0.1)";
+            el.style.borderColor = "rgba(201,168,76,0.8)";
+          }}
+          onMouseLeave={(e) => {
+            const el = e.currentTarget as HTMLElement;
+            el.style.background = "transparent";
+            el.style.borderColor = "rgba(201,168,76,0.5)";
+          }}
+        >
+          <Home size={18} />
+          Go Home
+        </button>
+      </div>
     </div>
   );
 }

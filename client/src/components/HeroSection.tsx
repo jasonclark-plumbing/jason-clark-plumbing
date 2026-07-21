@@ -88,24 +88,26 @@ export default function HeroSection() {
             className="font-bold leading-none"
             style={{
               fontFamily: "'Playfair Display', serif",
-              fontSize: "clamp(3rem, 8vw, 6rem)",
+              fontSize: "clamp(2.5rem, 7vw, 5.5rem)",
               color: "#F0EAD6",
             }}
           >
-            <span className="italic gold-shimmer-text">Jason Clark</span>
+            <span className="italic gold-shimmer-text">Professional</span>
+            <br />
+            <span className="italic gold-shimmer-text">Plumbing Services</span>
           </h1>
           <div
-            className="mt-1"
+            className="mt-2"
             style={{
               fontFamily: "'Montserrat', sans-serif",
-              fontSize: "clamp(1rem, 3vw, 1.75rem)",
-              fontWeight: 700,
-              letterSpacing: "0.35em",
+              fontSize: "clamp(0.875rem, 2.5vw, 1.5rem)",
+              fontWeight: 600,
+              letterSpacing: "0.2em",
               color: "#C9A84C",
               textTransform: "uppercase",
             }}
           >
-            Plumbing
+            Jason Clark • Huntingdon
           </div>
         </div>
 

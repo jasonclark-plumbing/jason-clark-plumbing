@@ -12,11 +12,16 @@
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://jasonclark.online/" />
     <meta property="og:site_name" content="Jason Clark Plumbing" />
+    <meta property="og:image" content="https://d2xsxph8kpxj0f.cloudfront.net/310519663746061583/JZGjRQ39WvQmto8RQcSvRP/hero-bg-8MwGcWTbR4BtaMFBfPrzmt.webp" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Jason Clark Plumbing - Professional Local Plumbing Services in Huntingdon" />
     <meta name="geo.placename" content="Huntingdon" />
-    <meta name="geo.region" content="GB-HUN" />
+    <meta name="theme-color" content="#0C0C0C" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Jason Clark Plumbing | Reliable Local Plumbing in Huntingdon" />
     <meta name="twitter:description" content="Reliable local plumbing services in Huntingdon and surrounding areas. Call 01480 769129 or WhatsApp 07767 910713." />
+    <meta name="twitter:image" content="https://d2xsxph8kpxj0f.cloudfront.net/310519663746061583/JZGjRQ39WvQmto8RQcSvRP/hero-bg-8MwGcWTbR4BtaMFBfPrzmt.webp" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -46,6 +51,46 @@
         }
       }
     </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is your guarantee?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "We guarantee all work for 12 months from completion against defective workmanship. Parts are covered by manufacturer's guarantee."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What are your business hours?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "We operate Monday to Friday, 0700–1800. We do not offer emergency after-hours service."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What areas do you serve?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "We provide plumbing services in Huntingdon, Godmanchester, St Ives, Brampton, Hartford, Wyton, Fenstanton, Hemingford Grey, Alconbury, Abbots Ripton, and surrounding villages."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How quickly can you visit?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "We aim to respond to enquiries during business hours. Contact us by phone, WhatsApp, or email to arrange a convenient appointment."
+            }
+          }
+        ]
+      }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -53,6 +98,17 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=%VITE_GA4_ID%"></script>
+    <script>
+      if (window.location.hostname !== 'localhost' && '%VITE_GA4_ID%' !== '%VITE_GA4_ID%') {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', '%VITE_GA4_ID%', { 'anonymize_ip': true });
+      }
+    </script>
+    <!-- Umami Analytics (optional fallback) -->
     <script
       defer
       src="%VITE_ANALYTICS_ENDPOINT%/umami"
