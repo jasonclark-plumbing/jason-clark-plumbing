@@ -6,7 +6,11 @@ export function trackEvent(eventName: string, params: EventParams = {}) {
   const gtag = (window as Window & { gtag?: (...args: unknown[]) => void }).gtag;
   if (typeof gtag !== "function") return;
 
-  gtag("event", eventName, params);
+  try {
+    gtag("event", eventName, params);
+  } catch {
+    // Keep page flow intact even if analytics transport fails.
+  }
 
   // Ensure lead reporting is emitted for enquiry submissions.
   if (eventName === "contact_form_mailto_submit") {
@@ -15,7 +19,11 @@ export function trackEvent(eventName: string, params: EventParams = {}) {
       placement: typeof params.placement === "string" ? params.placement : "contact_section",
     };
 
-    gtag("event", "generate_lead", leadParams);
+    try {
+      gtag("event", "generate_lead", leadParams);
+    } catch {
+      // dataLayer fallback below still emits the event object.
+    }
 
     const dataLayer = (window as Window & { dataLayer?: unknown[] }).dataLayer;
     if (Array.isArray(dataLayer)) {
