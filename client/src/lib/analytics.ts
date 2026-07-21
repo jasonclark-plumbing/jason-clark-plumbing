@@ -7,6 +7,14 @@ export function trackEvent(eventName: string, params: EventParams = {}) {
   if (typeof gtag !== "function") return;
 
   gtag("event", eventName, params);
+
+  // Ensure lead reporting is emitted for enquiry submissions.
+  if (eventName === "contact_form_mailto_submit") {
+    gtag("event", "generate_lead", {
+      channel: "mailto",
+      placement: typeof params.placement === "string" ? params.placement : "contact_section",
+    });
+  }
 }
 
 export function trackContactClick(method: "phone" | "whatsapp" | "email" | "callback", placement: string) {

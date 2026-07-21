@@ -7,7 +7,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Phone, MessageCircle, Mail, Facebook, MapPin } from "lucide-react";
-import { trackContactClick, trackEvent, trackGenerateLead } from "@/lib/analytics";
+import { trackContactClick, trackEvent } from "@/lib/analytics";
 
 function useInView(threshold = 0.12) {
   const ref = useRef<HTMLDivElement>(null);
@@ -78,7 +78,6 @@ export default function ContactSection() {
       `Name: ${form.name}\nPhone: ${form.phone}\nEmail: ${form.email}\n\nMessage:\n${form.message}`
     );
     trackEvent("contact_form_mailto_submit", { placement: "contact_section" });
-    trackGenerateLead("mailto", "contact_section");
     window.location.href = `mailto:plumbing@jasonclark.online?subject=${subject}&body=${body}`;
     setSubmitted(true);
   };
