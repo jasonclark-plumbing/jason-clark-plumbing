@@ -87,24 +87,12 @@ export default function Reviews() {
     }
   };
 
-  // Combine static testimonials with database reviews
-  const allReviews = [
-    ...testimonials.map((t) => ({
-      id: `static-${t.id}` as any,
-      customerName: t.name,
-      customerEmail: "",
-      rating: 5,
-      text: t.text,
-      status: "approved" as const,
-      submittedAt: t.date,
-      isStatic: true,
-    })),
-    ...approvedReviews.map((r: DatabaseReview) => ({
-      ...r,
-      id: `db-${r.id}`,
-      isStatic: false,
-    })),
-  ];
+  // Use only database reviews (no static testimonials)
+  const allReviews = approvedReviews.map((r: DatabaseReview) => ({
+    ...r,
+    id: `db-${r.id}`,
+    isStatic: false,
+  }));
 
   return (
     <div className="min-h-screen bg-black text-cream pb-20">
@@ -165,10 +153,10 @@ export default function Reviews() {
                 </p>
 
                 {/* Admin Reply */}
-                {!review.isStatic && replies[review.id] && replies[review.id].length > 0 && (
+                {replies[review.id as any] && replies[review.id as any].length > 0 && (
                   <div className="mt-6 p-4 bg-gold/5 border border-gold/20 rounded">
                     <p className="text-sm font-semibold text-gold mb-2">Jason Clark's Response:</p>
-                    {replies[review.id].map((reply) => (
+                    {replies[review.id as any].map((reply: Reply) => (
                       <div key={reply.id}>
                         <p className="text-cream/80 text-sm mb-2">{reply.text}</p>
                         <p className="text-cream/40 text-xs">
