@@ -13,7 +13,7 @@ interface Review {
 export default function TestimonialsSection() {
   const [latestReview, setLatestReview] = useState<Review | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const fallbackReview = testimonials[0];
+  const fallbackReview = testimonials.length > 0 ? testimonials[0] : null;
 
   useEffect(() => {
     const fetchLatestReview = async () => {
@@ -45,13 +45,13 @@ export default function TestimonialsSection() {
   }, []);
 
   // Use latest review from database, or fallback to placeholder
-  const featuredTestimonial = latestReview || {
+  const featuredTestimonial = latestReview || (fallbackReview ? {
     id: fallbackReview.id,
     customerName: fallbackReview.name,
     text: fallbackReview.text,
     rating: 5,
     submittedAt: fallbackReview.date,
-  };
+  } : null);
 
   return (
     <section className="bg-black text-cream py-20 px-4">
@@ -65,44 +65,50 @@ export default function TestimonialsSection() {
         </div>
 
         {/* Featured Testimonial */}
-        <div className="max-w-3xl mx-auto mb-12">
-          <div className="border-l-4 border-gold pl-8 py-8">
-            {/* Quote Mark */}
-            <div className="text-6xl text-gold/30 mb-4 leading-none">"</div>
+        {featuredTestimonial ? (
+          <div className="max-w-3xl mx-auto mb-12">
+            <div className="border-l-4 border-gold pl-8 py-8">
+              {/* Quote Mark */}
+              <div className="text-6xl text-gold/30 mb-4 leading-none">"</div>
 
-            {/* Testimonial Text */}
-            <p className="text-xl text-cream mb-6 leading-relaxed italic">
-              {isLoading ? "Loading latest review..." : featuredTestimonial.text}
-            </p>
+              {/* Testimonial Text */}
+              <p className="text-xl text-cream mb-6 leading-relaxed italic">
+                {isLoading ? "Loading latest review..." : featuredTestimonial.text}
+              </p>
 
-            {/* Customer Info */}
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gold font-playfair text-lg font-semibold">
-                  {featuredTestimonial.customerName}
-                </p>
-                <p className="text-cream/60 text-sm">
-                  {new Date(featuredTestimonial.submittedAt).toLocaleDateString(
-                    "en-GB",
-                    {
-                      year: "numeric",
-                      month: "long",
-                    }
-                  )}
-                </p>
-              </div>
+              {/* Customer Info */}
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-gold font-playfair text-lg font-semibold">
+                    {featuredTestimonial.customerName}
+                  </p>
+                  <p className="text-cream/60 text-sm">
+                    {new Date(featuredTestimonial.submittedAt).toLocaleDateString(
+                      "en-GB",
+                      {
+                        year: "numeric",
+                        month: "long",
+                      }
+                    )}
+                  </p>
+                </div>
 
-              {/* Star Rating */}
-              <div className="flex gap-1">
-                {[...Array(featuredTestimonial.rating)].map((_, i) => (
-                  <span key={i} className="text-gold text-2xl">
-                    ★
-                  </span>
-                ))}
+                {/* Star Rating */}
+                <div className="flex gap-1">
+                  {[...Array(featuredTestimonial.rating)].map((_, i) => (
+                    <span key={i} className="text-gold text-2xl">
+                      ★
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        ) : (
+          <div className="max-w-3xl mx-auto mb-12 text-center py-12">
+            <p className="text-cream/60">No reviews yet. Be the first to share your experience!</p>
+          </div>
+        )}
 
         {/* View All Reviews Link */}
         <div className="text-center">
