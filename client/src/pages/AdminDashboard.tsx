@@ -238,13 +238,23 @@ export default function AdminDashboard() {
 
   const handleLogout = async () => {
     try {
-      await fetch("/api/trpc/admin.logout", {
+      const response = await fetch("/api/trpc/admin.logout", {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
         credentials: "include",
+        body: JSON.stringify({}),
       });
-      window.location.href = "/";
+      
+      if (response.ok) {
+        // Clear any local state and redirect
+        window.location.href = "/admin/login";
+      } else {
+        console.error("Logout failed:", response.statusText);
+      }
     } catch (err) {
       console.error("Logout failed:", err);
+      // Force redirect anyway
+      window.location.href = "/admin/login";
     }
   };
 
