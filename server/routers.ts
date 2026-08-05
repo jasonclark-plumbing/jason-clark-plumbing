@@ -422,13 +422,27 @@ export const appRouter = router({
           (ctx.req.session as any).adminId = admin.id;
           (ctx.req.session as any).adminEmail = admin.email;
 
-          return {
-            success: true,
-            admin: {
-              id: admin.id,
-              email: admin.email,
-            },
-          };
+          // Save session to ensure it persists
+          return new Promise((resolve, reject) => {
+            ctx.req.session.save((err: any) => {
+              if (err) {
+                reject(
+                  new TRPCError({
+                    code: "INTERNAL_SERVER_ERROR",
+                    message: "Failed to save session",
+                  })
+                );
+              } else {
+                resolve({
+                  success: true,
+                  admin: {
+                    id: admin.id,
+                    email: admin.email,
+                  },
+                });
+              }
+            });
+          })
         } catch (error) {
           console.error("[tRPC] Admin login error:", error);
           if (error instanceof TRPCError) throw error;
