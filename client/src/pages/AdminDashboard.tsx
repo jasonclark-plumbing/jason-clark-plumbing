@@ -64,27 +64,34 @@ export default function AdminDashboard() {
         sortOrder: sortOrder,
         searchQuery: searchQuery || "",
       };
-      const queryString = encodeURIComponent(JSON.stringify(input));
-      const response = await fetch(`/api/trpc/reviews.getAll?input=${queryString}`, {
+      // Use correct tRPC batch format
+      const response = await fetch("/api/trpc/reviews.getAll", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         credentials: "include",
+        body: JSON.stringify({
+          "0": {
+            "json": input,
+          },
+        }),
       });
-
-      const data = await response.json();
-
-      // Check for tRPC error
-      if (data.error) {
-        throw new Error(data.error.message || "Failed to fetch reviews");
-      }
 
       if (!response.ok) {
         throw new Error("Failed to fetch reviews");
       }
 
-      setReviews(data.result?.data || []);
+      const data = await response.json();
+
+      // Check for tRPC error in batch response
+      if (data[0]?.error) {
+        throw new Error(data[0].error.message || "Failed to fetch reviews");
+      }
+
+      setReviews(data[0]?.result?.data || []);
       setError("");
 
       // Fetch replies for all reviews
-      for (const review of data.result?.data || []) {
+      for (const review of data[0]?.result?.data || []) {
         fetchReplies(review.id);
       }
     } catch (err) {
@@ -96,14 +103,21 @@ export default function AdminDashboard() {
 
   const fetchReplies = async (reviewId: number) => {
     try {
-      const response = await fetch(`/api/trpc/reviews.getReplies?input=${JSON.stringify({ reviewId })}`, {
+      const response = await fetch("/api/trpc/reviews.getReplies", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         credentials: "include",
+        body: JSON.stringify({
+          "0": {
+            "json": { reviewId },
+          },
+        }),
       });
       const data = await response.json();
-      if (data.result?.data) {
+      if (data[0]?.result?.data) {
         setReplies((prev) => ({
           ...prev,
-          [reviewId]: data.result.data,
+          [reviewId]: data[0].result.data,
         }));
       }
     } catch (err) {
@@ -238,11 +252,16 @@ export default function AdminDashboard() {
 
   const handleLogout = async () => {
     try {
+      // Use correct tRPC batch format
       const response = await fetch("/api/trpc/admin.logout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({}),
+        body: JSON.stringify({
+          "0": {
+            "json": {},
+          },
+        }),
       });
       
       if (response.ok) {

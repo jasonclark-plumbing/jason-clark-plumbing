@@ -12,29 +12,39 @@ export default function AdminLogin() {
     setError("");
 
     try {
+      // Use correct tRPC batch format
       const response = await fetch("/api/trpc/admin.login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify({
-          email,
-          password,
+          "0": {
+            "json": {
+              email,
+              password,
+            },
+          },
         }),
       });
 
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData[0]?.error?.message || 
+          errorData.error?.message || 
+          "Login failed"
+        );
+      }
+
       const data = await response.json();
 
-      // Check for tRPC error
-      if (data.error) {
-        throw new Error(data.error.message || "Login failed");
+      // Check for tRPC error in batch response
+      if (data[0]?.error) {
+        throw new Error(data[0].error.message || "Login failed");
       }
 
       // Check for successful result
-      if (!data.result?.data?.success) {
-        throw new Error("Login failed");
-      }
-
-      if (!response.ok) {
+      if (!data[0]?.result?.data?.success) {
         throw new Error("Login failed");
       }
 
