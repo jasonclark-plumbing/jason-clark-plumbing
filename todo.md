@@ -232,3 +232,26 @@ The admin reply functionality has been successfully implemented and tested:
 - Reply stored in database successfully
 
 The feature is production-ready. The public page reply display needs minor UI refinement but the data flow is complete and working.
+
+
+## New Feature: Dedicated Contact Us Page (IN PROGRESS)
+
+### Page Creation
+- [x] Create Contact.tsx page component with form and contact details
+- [x] Add routing to App.tsx (/contact route)
+- [x] Add SEO meta tags for contact page
+- [ ] Test Contact page accessibility and responsiveness
+- [ ] Verify form submission works
+- [ ] Test navigation links to Contact page
+
+### Integration
+- [x] Add Contact link to navbar (CONTACT button)
+- [ ] Update internal links to point to /contact instead of /#contact
+- [ ] Add Contact page to sitemap
+
+### Testing
+- [ ] Test Contact page loads correctly
+- [ ] Test form submission
+- [ ] Test all contact method links (phone, WhatsApp, email)
+- [ ] Test mobile responsiveness
+- [ ] Test QR code linking to /contact page (for van signs)

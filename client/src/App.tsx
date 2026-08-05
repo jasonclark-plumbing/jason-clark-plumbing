@@ -5,6 +5,7 @@ import NotFound from "@/pages/NotFound";
 import Reviews from "@/pages/Reviews";
 import Privacy from "@/pages/Privacy";
 import Terms from "@/pages/Terms";
+import Contact from "@/pages/Contact";
 import AdminLogin from "@/pages/AdminLogin";
 import AdminDashboard from "@/pages/AdminDashboard";
 import { Route, Switch, useLocation } from "wouter";
@@ -47,6 +48,11 @@ const ROUTE_META: Record<string, { title: string; description: string; robots: s
     title: "Admin Dashboard | Jason Clark Plumbing",
     description: "Administrator dashboard for Jason Clark Plumbing.",
     robots: "noindex, nofollow",
+  },
+  "/contact": {
+    title: "Contact Us | Jason Clark Plumbing",
+    description: "Get in touch with Jason Clark Plumbing. Call 01480 769129 or fill out our contact form for a quick response.",
+    robots: "index, follow",
   },
   "/404": {
     title: "Page Not Found | Jason Clark Plumbing",
@@ -124,6 +130,7 @@ function Router() {
     <Switch>
       <Route path={"/"} component={Home} />
       <Route path={"/reviews"} component={Reviews} />
+      <Route path={"/contact"} component={Contact} />
       <Route path={"/privacy"} component={Privacy} />
       <Route path={"/terms"} component={Terms} />
       <Route path={"/admin/login"} component={AdminLogin} />
