@@ -400,7 +400,9 @@ export const appRouter = router({
       )
       .mutation(async ({ input, ctx }) => {
         try {
+          console.log("[Login] Attempting login for:", input.email);
           const admin = await getAdminByEmail(input.email);
+          console.log("[Login] Admin found:", admin ? `ID ${admin.id}` : "not found");
 
           if (!admin) {
             throw new TRPCError({
@@ -409,7 +411,18 @@ export const appRouter = router({
             });
           }
 
+          console.log("[Login] Comparing password...");
+          console.log("[Login] Input password length:", input.password.length);
+          console.log("[Login] Hash length:", admin.passwordHash.length);
+          console.log("[Login] Hash starts with:", admin.passwordHash.substring(0, 10));
           const isPasswordValid = await bcrypt.compare(input.password, admin.passwordHash);
+          console.log("[Login] Password valid:", isPasswordValid);
+          if (!isPasswordValid) {
+            console.log("[Login] Password mismatch - trying with trimmed password");
+            const trimmedPassword = input.password.trim();
+            const isPasswordValidTrimmed = await bcrypt.compare(trimmedPassword, admin.passwordHash);
+            console.log("[Login] Trimmed password valid:", isPasswordValidTrimmed);
+          }
 
           if (!isPasswordValid) {
             throw new TRPCError({

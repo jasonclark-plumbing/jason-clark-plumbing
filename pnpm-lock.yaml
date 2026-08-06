@@ -142,6 +142,9 @@ importers:
       express-session:
         specifier: ^1.19.0
         version: 1.19.0
+      express-session-sqlite:
+        specifier: ^2.1.1
+        version: 2.1.1
       framer-motion:
         specifier: ^12.23.22
         version: 12.23.22(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
@@ -2819,6 +2822,9 @@ packages:
     peerDependencies:
       express: '>= 4.11'
 
+  express-session-sqlite@2.1.1:
+    resolution: {integrity: sha512-wbL+1uZykkXvDEPKhhJZE75gN9RBlI/WbW1g4LAYtUYS+gjtWBpJOP2x1bdgRZHUYbIFY7L8qieFvZEBsqaMlw==}
+
   express-session@1.19.0:
     resolution: {integrity: sha512-0csaMkGq+vaiZTmSMMGkfdCOabYv192VbytFypcvI0MANrp+4i/7yEkJ0sbAEhycQjntaKGzYfjfXQyVb7BHMA==}
     engines: {node: '>= 0.8.0'}
@@ -3799,6 +3805,13 @@ packages:
   sql-escaper@1.5.1:
     resolution: {integrity: sha512-4toX5E1fQbBrpfXidaHnF0669nkAdETeIPTs2SUjxxD7RRIs9ICG4gtpmfc68JCEKehsdwLFqBu9VlQqZ1P1gg==}
     engines: {bun: '>=1.0.0', deno: '>=2.0.0', node: '>=12.0.0'}
+
+  sql-template-strings@2.2.2:
+    resolution: {integrity: sha512-UXhXR2869FQaD+GMly8jAMCRZ94nU5KcrFetZfWEMd+LVVG6y0ExgHAhatEcKZ/wk8YcKPdi+hiD2wm75lq3/Q==}
+    engines: {node: '>=4.0.0'}
+
+  sqlite@4.2.1:
+    resolution: {integrity: sha512-Tll0Ndvnwkuv5Hn6WIbh26rZiYQORuH1t5m/or9LUpSmDmmyFG89G9fKrSeugMPxwmEIXoVxqTun4LbizTs4uw==}
 
   stackback@0.0.2:
     resolution: {integrity: sha512-1XMJE5fQo1jGH6Y/7ebnwPOBEkIEnT4QF32d5R1+VXdXveM0IBMJt8zfaxX1P3QhVwrYe+576+jkANtSS2mBbw==}
@@ -6521,6 +6534,14 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  express-session-sqlite@2.1.1:
+    dependencies:
+      debug: 4.4.3
+      sql-template-strings: 2.2.2
+      sqlite: 4.2.1
+    transitivePeerDependencies:
+      - supports-color
+
   express-session@1.19.0:
     dependencies:
       cookie: 0.7.2
@@ -7875,6 +7896,10 @@ snapshots:
   space-separated-tokens@2.0.2: {}
 
   sql-escaper@1.5.1: {}
+
+  sql-template-strings@2.2.2: {}
+
+  sqlite@4.2.1: {}
 
   stackback@0.0.2: {}
 

@@ -63,7 +63,7 @@ async function startServer() {
       return next();
     }
 
-    const knownRoutes = ["/", "/reviews", "/admin/login", "/admin/dashboard", "/404"];
+    const knownRoutes = ["/", "/reviews", "/admin/login", "/admin/dashboard", "/404", "/contact"];
     const hasFileExtension = /\.[a-zA-Z0-9]+$/.test(pathname);
 
     if (knownRoutes.includes(pathname) || !hasFileExtension) {
