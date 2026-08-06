@@ -16,11 +16,19 @@ export interface EmailNotificationPayload {
  */
 export async function sendEmail(payload: EmailNotificationPayload): Promise<boolean> {
   try {
+    console.log("[Email] Attempting to send email to:", payload.to);
+    console.log("[Email] Subject:", payload.subject);
+    console.log("[Email] API URL configured:", !!BUILT_IN_FORGE_API_URL);
+    console.log("[Email] API Key configured:", !!BUILT_IN_FORGE_API_KEY);
+    
     if (!BUILT_IN_FORGE_API_URL || !BUILT_IN_FORGE_API_KEY) {
-      console.error("Email service not configured");
+      console.error("[Email] ERROR: Email service not configured");
+      console.error("[Email] BUILT_IN_FORGE_API_URL:", BUILT_IN_FORGE_API_URL);
+      console.error("[Email] BUILT_IN_FORGE_API_KEY:", BUILT_IN_FORGE_API_KEY ? "[SET]" : "[NOT SET]");
       return false;
     }
 
+    console.log("[Email] Sending to:", `${BUILT_IN_FORGE_API_URL}/v1/email/send`);
     const response = await fetch(`${BUILT_IN_FORGE_API_URL}/v1/email/send`, {
       method: "POST",
       headers: {
@@ -37,13 +45,16 @@ export async function sendEmail(payload: EmailNotificationPayload): Promise<bool
 
     if (!response.ok) {
       const error = await response.text();
-      console.error("Failed to send email:", error);
+      console.error("[Email] ERROR: Failed to send email");
+      console.error("[Email] Status:", response.status, response.statusText);
+      console.error("[Email] Response:", error);
       return false;
     }
 
+    console.log("[Email] SUCCESS: Email sent to", payload.to);
     return true;
   } catch (error) {
-    console.error("Email service error:", error);
+    console.error("[Email] ERROR: Email service exception:", error);
     return false;
   }
 }
