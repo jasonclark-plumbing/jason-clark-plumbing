@@ -50,6 +50,13 @@ export default function AdminLogin() {
         throw new Error("Login failed");
       }
 
+      // Store auth token in localStorage as fallback for sandboxed environments
+      localStorage.setItem("adminToken", JSON.stringify({
+        id: data.result.admin.id,
+        email: data.result.admin.email,
+        timestamp: Date.now(),
+      }));
+
       // Add a small delay to ensure session cookie is set before redirecting
       setTimeout(() => {
         window.location.href = "/admin/dashboard";

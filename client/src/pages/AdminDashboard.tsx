@@ -36,6 +36,7 @@ export default function AdminDashboard() {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
   const [actionLoading, setActionLoading] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortField, setSortField] = useState<SortField>("date");
@@ -51,6 +52,13 @@ export default function AdminDashboard() {
   const [replies, setReplies] = useState<Record<number, Reply[]>>({});
 
   useEffect(() => {
+    // Check if user is authenticated
+    const adminToken = localStorage.getItem("adminToken");
+    if (!adminToken) {
+      // No token, redirect to login
+      window.location.href = "/admin/login";
+      return;
+    }
     fetchReviews();
   }, [statusFilter, sortField, sortOrder, searchQuery]);
 
