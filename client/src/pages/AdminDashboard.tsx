@@ -284,12 +284,15 @@ export default function AdminDashboard() {
         }),
       });
       
-      if (response.ok) {
-        // Clear any local state and redirect
-        window.location.href = "/admin/login";
-      } else {
-        console.error("Logout failed:", response.statusText);
+      const data = await response.json();
+      
+      // Check for tRPC error
+      if (data[0]?.error) {
+        console.error("Logout error:", data[0].error.message);
       }
+      
+      // Always redirect to login after logout attempt
+      window.location.href = "/admin/login";
     } catch (err) {
       console.error("Logout failed:", err);
       // Force redirect anyway
