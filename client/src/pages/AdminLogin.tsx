@@ -11,8 +11,6 @@ export default function AdminLogin() {
     setLoading(true);
     setError("");
 
-    console.log("Form submission - email:", email, "password:", password);
-
     // Validate inputs
     if (!email || !password) {
       setError("Email and password are required");
@@ -21,47 +19,34 @@ export default function AdminLogin() {
     }
 
     try {
-      // Ensure values are strings
-      const emailValue = String(email).trim();
-      const passwordValue = String(password).trim();
-
-      console.log("Sending login request with:", { emailValue, passwordValue });
-
-      // Use correct tRPC batch format
+      // Send raw JSON directly to tRPC (not batch format)
       const response = await fetch("/api/trpc/admin.login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify({
-          "0": {
-            "json": {
-              email: emailValue,
-              password: passwordValue,
-            },
-          },
+          email,
+          password,
         }),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.error("Login response error:", errorData);
         throw new Error(
-          errorData[0]?.error?.message || 
           errorData.error?.message || 
           "Login failed"
         );
       }
 
       const data = await response.json();
-      console.log("Login response:", data);
 
-      // Check for tRPC error in batch response
-      if (data[0]?.error) {
-        throw new Error(data[0].error.message || "Login failed");
+      // Check for tRPC error
+      if (data.error) {
+        throw new Error(data.error.message || "Login failed");
       }
 
       // Check for successful result
-      if (!data[0]?.result?.data?.success) {
+      if (!data.result?.success) {
         throw new Error("Login failed");
       }
 
@@ -70,7 +55,6 @@ export default function AdminLogin() {
         window.location.href = "/admin/dashboard";
       }, 500);
     } catch (err) {
-      console.error("Login error:", err);
       setError(err instanceof Error ? err.message : "Login failed");
     } finally {
       setLoading(false);

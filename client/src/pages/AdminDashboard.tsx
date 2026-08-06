@@ -64,16 +64,12 @@ export default function AdminDashboard() {
         sortOrder: sortOrder,
         searchQuery: searchQuery || "",
       };
-      // Use correct tRPC batch format
+      // Send raw JSON directly to tRPC (not batch format)
       const response = await fetch("/api/trpc/reviews.getAll", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({
-          "0": {
-            "json": input,
-          },
-        }),
+        body: JSON.stringify(input),
       });
 
       if (!response.ok) {
@@ -82,16 +78,16 @@ export default function AdminDashboard() {
 
       const data = await response.json();
 
-      // Check for tRPC error in batch response
-      if (data[0]?.error) {
-        throw new Error(data[0].error.message || "Failed to fetch reviews");
+      // Check for tRPC error
+      if (data.error) {
+        throw new Error(data.error.message || "Failed to fetch reviews");
       }
 
-      setReviews(data[0]?.result?.data || []);
+      setReviews(data.result || []);
       setError("");
 
       // Fetch replies for all reviews
-      for (const review of data[0]?.result?.data || []) {
+      for (const review of data.result || []) {
         fetchReplies(review.id);
       }
     } catch (err) {
@@ -107,17 +103,13 @@ export default function AdminDashboard() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({
-          "0": {
-            "json": { reviewId },
-          },
-        }),
+        body: JSON.stringify({ reviewId }),
       });
       const data = await response.json();
-      if (data[0]?.result?.data) {
+      if (data.result) {
         setReplies((prev) => ({
           ...prev,
-          [reviewId]: data[0].result.data,
+          [reviewId]: data.result,
         }));
       }
     } catch (err) {
@@ -132,11 +124,7 @@ export default function AdminDashboard() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({
-          "0": {
-            "json": { reviewId },
-          },
-        }),
+        body: JSON.stringify({ reviewId }),
       });
 
       if (!response.ok) throw new Error("Failed to approve review");
@@ -157,11 +145,7 @@ export default function AdminDashboard() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({
-          "0": {
-            "json": { reviewId },
-          },
-        }),
+        body: JSON.stringify({ reviewId }),
       });
 
       if (!response.ok) throw new Error("Failed to reject review");
@@ -182,11 +166,7 @@ export default function AdminDashboard() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({
-          "0": {
-            "json": { reviewId },
-          },
-        }),
+        body: JSON.stringify({ reviewId }),
       });
 
       if (!response.ok) throw new Error("Failed to delete review");
@@ -208,11 +188,7 @@ export default function AdminDashboard() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           credentials: "include",
-          body: JSON.stringify({
-            "0": {
-              "json": { reviewId },
-            },
-          }),
+          body: JSON.stringify({ reviewId }),
         });
       }
       setReviews((prev) => prev.filter((r) => !selectedReviews.has(r.id)));
@@ -233,11 +209,7 @@ export default function AdminDashboard() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           credentials: "include",
-          body: JSON.stringify({
-            "0": {
-              "json": { reviewId },
-            },
-          }),
+          body: JSON.stringify({ reviewId }),
         });
       }
       setReviews((prev) => prev.filter((r) => !selectedReviews.has(r.id)));
@@ -272,23 +244,19 @@ export default function AdminDashboard() {
 
   const handleLogout = async () => {
     try {
-      // Use correct tRPC batch format
+      // Send raw JSON directly to tRPC (not batch format)
       const response = await fetch("/api/trpc/admin.logout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({
-          "0": {
-            "json": {},
-          },
-        }),
+        body: JSON.stringify({}),
       });
       
       const data = await response.json();
       
       // Check for tRPC error
-      if (data[0]?.error) {
-        console.error("Logout error:", data[0].error.message);
+      if (data.error) {
+        console.error("Logout error:", data.error.message);
       }
       
       // Always redirect to login after logout attempt
@@ -310,12 +278,8 @@ export default function AdminDashboard() {
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify({
-          "0": {
-            "json": {
-              reviewId: selectedReviewForReply.id,
-              text: replyText,
-            },
-          },
+          reviewId: selectedReviewForReply.id,
+          text: replyText,
         }),
       });
 
@@ -339,11 +303,7 @@ export default function AdminDashboard() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({
-          "0": {
-            "json": { replyId },
-          },
-        }),
+        body: JSON.stringify({ replyId }),
       });
 
       if (!response.ok) throw new Error("Failed to delete reply");
