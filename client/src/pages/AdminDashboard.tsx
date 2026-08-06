@@ -132,7 +132,11 @@ export default function AdminDashboard() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ reviewId }),
+        body: JSON.stringify({
+          "0": {
+            "json": { reviewId },
+          },
+        }),
       });
 
       if (!response.ok) throw new Error("Failed to approve review");
@@ -153,7 +157,11 @@ export default function AdminDashboard() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ reviewId }),
+        body: JSON.stringify({
+          "0": {
+            "json": { reviewId },
+          },
+        }),
       });
 
       if (!response.ok) throw new Error("Failed to reject review");
@@ -174,7 +182,11 @@ export default function AdminDashboard() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ reviewId }),
+        body: JSON.stringify({
+          "0": {
+            "json": { reviewId },
+          },
+        }),
       });
 
       if (!response.ok) throw new Error("Failed to delete review");
@@ -196,7 +208,11 @@ export default function AdminDashboard() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           credentials: "include",
-          body: JSON.stringify({ reviewId }),
+          body: JSON.stringify({
+            "0": {
+              "json": { reviewId },
+            },
+          }),
         });
       }
       setReviews((prev) => prev.filter((r) => !selectedReviews.has(r.id)));
@@ -217,7 +233,11 @@ export default function AdminDashboard() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           credentials: "include",
-          body: JSON.stringify({ reviewId }),
+          body: JSON.stringify({
+            "0": {
+              "json": { reviewId },
+            },
+          }),
         });
       }
       setReviews((prev) => prev.filter((r) => !selectedReviews.has(r.id)));
@@ -287,8 +307,12 @@ export default function AdminDashboard() {
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify({
-          reviewId: selectedReviewForReply.id,
-          text: replyText,
+          "0": {
+            "json": {
+              reviewId: selectedReviewForReply.id,
+              text: replyText,
+            },
+          },
         }),
       });
 
@@ -312,7 +336,11 @@ export default function AdminDashboard() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ replyId }),
+        body: JSON.stringify({
+          "0": {
+            "json": { replyId },
+          },
+        }),
       });
 
       if (!response.ok) throw new Error("Failed to delete reply");
