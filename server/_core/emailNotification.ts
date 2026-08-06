@@ -1,7 +1,22 @@
-// Mailgun email service configuration
-const MAILGUN_API_KEY = process.env.MAILGUN_API_KEY || "";
-const MAILGUN_DOMAIN = process.env.MAILGUN_DOMAIN || "mg.jasonclark.online";
-const MAILGUN_FROM_EMAIL = process.env.MAILGUN_FROM_EMAIL || "noreply@jasonclark.online";
+import nodemailer from "nodemailer";
+
+// Proton Mail SMTP configuration
+const SMTP_HOST = process.env.PROTON_SMTP_HOST || "smtp.protonmail.ch";
+const SMTP_PORT = parseInt(process.env.PROTON_SMTP_PORT || "587");
+const SMTP_USER = process.env.PROTON_SMTP_USER || "plumbing@jasonclark.online";
+const SMTP_PASS = process.env.PROTON_SMTP_PASS || "";
+const FROM_EMAIL = process.env.PROTON_SMTP_USER || "reviews@jasonclark.online";
+
+// Create transporter
+const transporter = nodemailer.createTransport({
+  host: SMTP_HOST,
+  port: SMTP_PORT,
+  secure: false, // TLS (not SSL)
+  auth: {
+    user: SMTP_USER,
+    pass: SMTP_PASS,
+  },
+});
 
 export interface EmailNotificationPayload {
   to: string;
@@ -11,52 +26,33 @@ export interface EmailNotificationPayload {
 }
 
 /**
- * Send email using Mailgun API
+ * Send email using Proton Mail SMTP
  */
 export async function sendEmail(payload: EmailNotificationPayload): Promise<boolean> {
   try {
     console.log("[Email] Attempting to send email to:", payload.to);
     console.log("[Email] Subject:", payload.subject);
-    console.log("[Email] Mailgun API Key configured:", !!MAILGUN_API_KEY);
 
-    if (!MAILGUN_API_KEY) {
-      console.error("[Email] ERROR: Mailgun API key not configured");
-      console.error("[Email] MAILGUN_API_KEY:", MAILGUN_API_KEY ? "[SET]" : "[NOT SET]");
+    if (!SMTP_PASS) {
+      console.error("[Email] ERROR: Proton Mail SMTP password not configured");
       return false;
     }
 
-    console.log("[Email] Sending via Mailgun...");
-    
-    // Create FormData for Mailgun API
-    const formData = new URLSearchParams();
-    // For sandbox domain, use postmaster address; for production domain, use custom from address
-    const fromAddress = MAILGUN_DOMAIN.includes("sandbox") 
-      ? `postmaster@${MAILGUN_DOMAIN}`
-      : MAILGUN_FROM_EMAIL;
-    formData.append("from", fromAddress);
-    console.log("[Email] From address:", fromAddress);
-    formData.append("to", payload.to);
-    formData.append("subject", payload.subject);
-    formData.append("html", payload.html);
-    formData.append("text", payload.text);
+    console.log("[Email] Sending via Proton Mail SMTP...");
+    console.log("[Email] SMTP Host:", SMTP_HOST);
+    console.log("[Email] SMTP Port:", SMTP_PORT);
+    console.log("[Email] From address:", FROM_EMAIL);
 
-    const response = await fetch(`https://api.mailgun.net/v3/${MAILGUN_DOMAIN}/messages`, {
-      method: "POST",
-      headers: {
-        Authorization: `Basic ${Buffer.from(`api:${MAILGUN_API_KEY}`).toString("base64")}`,
-      },
-      body: formData,
+    const info = await transporter.sendMail({
+      from: FROM_EMAIL,
+      to: payload.to,
+      subject: payload.subject,
+      html: payload.html,
+      text: payload.text,
     });
 
-    if (!response.ok) {
-      const error = await response.text();
-      console.error("[Email] ERROR: Failed to send email");
-      console.error("[Email] Status:", response.status, response.statusText);
-      console.error("[Email] Response:", error);
-      return false;
-    }
-
-    console.log("[Email] SUCCESS: Email sent to", payload.to);
+    console.log("[Email] SUCCESS: Email sent");
+    console.log("[Email] Message ID:", info.messageId);
     return true;
   } catch (error) {
     console.error("[Email] ERROR: Email service exception:", error);
