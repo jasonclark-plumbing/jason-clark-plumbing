@@ -51,15 +51,16 @@ export default function AdminLogin() {
       }
 
       // Store auth token in localStorage as fallback for sandboxed environments
-      localStorage.setItem("adminToken", JSON.stringify({
+      const token = btoa(JSON.stringify({
         id: data.result.admin.id,
         email: data.result.admin.email,
         timestamp: Date.now(),
       }));
+      localStorage.setItem("adminToken", token);
 
-      // Add a small delay to ensure session cookie is set before redirecting
+      // Redirect to dashboard with token in URL as fallback
       setTimeout(() => {
-        window.location.href = "/admin/dashboard";
+        window.location.href = `/admin/dashboard?token=${encodeURIComponent(token)}`;
       }, 500);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");

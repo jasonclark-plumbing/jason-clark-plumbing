@@ -52,13 +52,26 @@ export default function AdminDashboard() {
   const [replies, setReplies] = useState<Record<number, Reply[]>>({});
 
   useEffect(() => {
-    // Check if user is authenticated
-    const adminToken = localStorage.getItem("adminToken");
-    if (!adminToken) {
+    // Check if user is authenticated (from localStorage or URL token)
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlToken = urlParams.get("token");
+    const localToken = localStorage.getItem("adminToken");
+    
+    const token = urlToken || localToken;
+    
+    if (!token) {
       // No token, redirect to login
       window.location.href = "/admin/login";
       return;
     }
+    
+    // Store token in localStorage if it came from URL
+    if (urlToken) {
+      localStorage.setItem("adminToken", urlToken);
+      // Clean up URL by removing token
+      window.history.replaceState({}, document.title, "/admin/dashboard");
+    }
+    
     fetchReviews();
   }, [statusFilter, sortField, sortOrder, searchQuery]);
 
