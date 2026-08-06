@@ -3,7 +3,7 @@ import nodemailer from "nodemailer";
 // Proton Mail SMTP configuration
 const SMTP_HOST = process.env.PROTON_SMTP_HOST || "smtp.protonmail.ch";
 const SMTP_PORT = parseInt(process.env.PROTON_SMTP_PORT || "587");
-const SMTP_USER = process.env.PROTON_SMTP_USER || "plumbing@jasonclark.online";
+const SMTP_USER = process.env.PROTON_SMTP_USER || "reviews@jasonclark.online";
 const SMTP_PASS = process.env.PROTON_SMTP_PASS || "";
 const FROM_EMAIL = process.env.PROTON_SMTP_USER || "reviews@jasonclark.online";
 
@@ -39,9 +39,6 @@ export async function sendEmail(payload: EmailNotificationPayload): Promise<bool
     }
 
     console.log("[Email] Sending via Proton Mail SMTP...");
-    console.log("[Email] SMTP Host:", SMTP_HOST);
-    console.log("[Email] SMTP Port:", SMTP_PORT);
-    console.log("[Email] From address:", FROM_EMAIL);
 
     const info = await transporter.sendMail({
       from: FROM_EMAIL,
