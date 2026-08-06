@@ -11,6 +11,8 @@ export default function AdminLogin() {
     setLoading(true);
     setError("");
 
+    console.log("Form submission - email:", email, "password:", password);
+
     // Validate inputs
     if (!email || !password) {
       setError("Email and password are required");
@@ -19,6 +21,12 @@ export default function AdminLogin() {
     }
 
     try {
+      // Ensure values are strings
+      const emailValue = String(email).trim();
+      const passwordValue = String(password).trim();
+
+      console.log("Sending login request with:", { emailValue, passwordValue });
+
       // Use correct tRPC batch format
       const response = await fetch("/api/trpc/admin.login", {
         method: "POST",
@@ -27,8 +35,8 @@ export default function AdminLogin() {
         body: JSON.stringify({
           "0": {
             "json": {
-              email,
-              password,
+              email: emailValue,
+              password: passwordValue,
             },
           },
         }),
@@ -36,6 +44,7 @@ export default function AdminLogin() {
 
       if (!response.ok) {
         const errorData = await response.json();
+        console.error("Login response error:", errorData);
         throw new Error(
           errorData[0]?.error?.message || 
           errorData.error?.message || 
@@ -44,6 +53,7 @@ export default function AdminLogin() {
       }
 
       const data = await response.json();
+      console.log("Login response:", data);
 
       // Check for tRPC error in batch response
       if (data[0]?.error) {
@@ -60,6 +70,7 @@ export default function AdminLogin() {
         window.location.href = "/admin/dashboard";
       }, 500);
     } catch (err) {
+      console.error("Login error:", err);
       setError(err instanceof Error ? err.message : "Login failed");
     } finally {
       setLoading(false);
