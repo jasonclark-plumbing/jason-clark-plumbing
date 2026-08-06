@@ -11,6 +11,13 @@ export default function AdminLogin() {
     setLoading(true);
     setError("");
 
+    // Validate inputs
+    if (!email || !password) {
+      setError("Email and password are required");
+      setLoading(false);
+      return;
+    }
+
     try {
       // Use correct tRPC batch format
       const response = await fetch("/api/trpc/admin.login", {
