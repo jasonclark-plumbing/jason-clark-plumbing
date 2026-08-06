@@ -494,7 +494,7 @@ export default function AdminDashboard() {
                             ))}
                           </div>
                           <span className="text-cream/60 text-sm">
-                            {new Date(review.submittedAt).toLocaleDateString()}
+                            {new Date(review.submittedAt).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })}
                           </span>
                         </div>
 
