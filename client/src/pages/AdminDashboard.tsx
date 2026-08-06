@@ -104,11 +104,11 @@ export default function AdminDashboard() {
         throw new Error(data.error.message || "Failed to fetch reviews");
       }
 
-      setReviews(data.result || []);
+      setReviews(data.result?.data || []);
       setError("");
 
       // Fetch replies for all reviews
-      for (const review of data.result || []) {
+      for (const review of data.result?.data || []) {
         fetchReplies(review.id);
       }
     } catch (err) {
@@ -127,10 +127,10 @@ export default function AdminDashboard() {
         credentials: "include",
       });
       const data = await response.json();
-      if (data.result) {
+      if (data.result?.data) {
         setReplies((prev) => ({
           ...prev,
-          [reviewId]: data.result,
+          [reviewId]: data.result.data,
         }));
       }
     } catch (err) {
@@ -300,10 +300,10 @@ export default function AdminDashboard() {
       if (!response.ok) throw new Error("Failed to create reply");
 
       const data = await response.json();
-      if (data.result) {
+      if (data.result?.data) {
         setReplies((prev) => ({
           ...prev,
-          [selectedReviewForReply.id]: [...(prev[selectedReviewForReply.id] || []), data.result],
+          [selectedReviewForReply.id]: [...(prev[selectedReviewForReply.id] || []), data.result.data],
         }));
         setReplyText("");
         setReplyModalOpen(false);
