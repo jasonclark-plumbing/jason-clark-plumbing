@@ -1,8 +1,7 @@
-import { BUILT_IN_FORGE_API_KEY, BUILT_IN_FORGE_API_URL } from "./env";
-
-// Re-export for type safety
-const apiKey = BUILT_IN_FORGE_API_KEY || process.env.BUILT_IN_FORGE_API_KEY;
-const apiUrl = BUILT_IN_FORGE_API_URL || process.env.BUILT_IN_FORGE_API_URL;
+// Mailgun email service configuration
+const MAILGUN_API_KEY = process.env.MAILGUN_API_KEY || "";
+const MAILGUN_DOMAIN = process.env.MAILGUN_DOMAIN || "mg.jasonclark.online";
+const MAILGUN_FROM_EMAIL = process.env.MAILGUN_FROM_EMAIL || "noreply@jasonclark.online";
 
 export interface EmailNotificationPayload {
   to: string;
@@ -12,35 +11,41 @@ export interface EmailNotificationPayload {
 }
 
 /**
- * Send email using Manus built-in email service
+ * Send email using Mailgun API
  */
 export async function sendEmail(payload: EmailNotificationPayload): Promise<boolean> {
   try {
     console.log("[Email] Attempting to send email to:", payload.to);
     console.log("[Email] Subject:", payload.subject);
-    console.log("[Email] API URL configured:", !!BUILT_IN_FORGE_API_URL);
-    console.log("[Email] API Key configured:", !!BUILT_IN_FORGE_API_KEY);
-    
-    if (!BUILT_IN_FORGE_API_URL || !BUILT_IN_FORGE_API_KEY) {
-      console.error("[Email] ERROR: Email service not configured");
-      console.error("[Email] BUILT_IN_FORGE_API_URL:", BUILT_IN_FORGE_API_URL);
-      console.error("[Email] BUILT_IN_FORGE_API_KEY:", BUILT_IN_FORGE_API_KEY ? "[SET]" : "[NOT SET]");
+    console.log("[Email] Mailgun API Key configured:", !!MAILGUN_API_KEY);
+
+    if (!MAILGUN_API_KEY) {
+      console.error("[Email] ERROR: Mailgun API key not configured");
+      console.error("[Email] MAILGUN_API_KEY:", MAILGUN_API_KEY ? "[SET]" : "[NOT SET]");
       return false;
     }
 
-    console.log("[Email] Sending to:", `${BUILT_IN_FORGE_API_URL}/v1/email/send`);
-    const response = await fetch(`${BUILT_IN_FORGE_API_URL}/v1/email/send`, {
+    console.log("[Email] Sending via Mailgun...");
+    
+    // Create FormData for Mailgun API
+    const formData = new URLSearchParams();
+    // For sandbox domain, use postmaster address; for production domain, use custom from address
+    const fromAddress = MAILGUN_DOMAIN.includes("sandbox") 
+      ? `postmaster@${MAILGUN_DOMAIN}`
+      : MAILGUN_FROM_EMAIL;
+    formData.append("from", fromAddress);
+    console.log("[Email] From address:", fromAddress);
+    formData.append("to", payload.to);
+    formData.append("subject", payload.subject);
+    formData.append("html", payload.html);
+    formData.append("text", payload.text);
+
+    const response = await fetch(`https://api.mailgun.net/v3/${MAILGUN_DOMAIN}/messages`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${BUILT_IN_FORGE_API_KEY}`,
+        Authorization: `Basic ${Buffer.from(`api:${MAILGUN_API_KEY}`).toString("base64")}`,
       },
-      body: JSON.stringify({
-        to: payload.to,
-        subject: payload.subject,
-        html: payload.html,
-        text: payload.text,
-      }),
+      body: formData,
     });
 
     if (!response.ok) {
@@ -84,7 +89,7 @@ export async function sendNewReviewNotification(
       </div>
       
       <p style="margin-top: 20px;">
-        <a href="https://6fr2w9ap-jzgjrq39.manus.space/admin/dashboard" style="background-color: #d4af37; color: #000; padding: 10px 20px; text-decoration: none; border-radius: 4px; display: inline-block;">
+        <a href="https://jasonclark.online/admin/dashboard" style="background-color: #d4af37; color: #000; padding: 10px 20px; text-decoration: none; border-radius: 4px; display: inline-block;">
           Review in Admin Dashboard
         </a>
       </p>

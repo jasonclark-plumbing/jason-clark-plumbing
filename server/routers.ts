@@ -78,7 +78,7 @@ export const appRouter = router({
           // Send email notification to admin
           try {
             await sendNewReviewNotification(
-              "jason@jasonclark.online",
+              "plumbing@jasonclark.online",
               input.customerName,
               input.customerEmail,
               input.rating,
@@ -201,7 +201,7 @@ export const appRouter = router({
           // Send approval notification email
           try {
             await sendReviewApprovedNotification(
-              "jason@jasonclark.online",
+              "plumbing@jasonclark.online",
               review.customerName,
               review.customerEmail,
               review.rating,
@@ -254,7 +254,7 @@ export const appRouter = router({
           // Send rejection notification email
           try {
             await sendReviewRejectedNotification(
-              "jason@jasonclark.online",
+              "plumbing@jasonclark.online",
               review.customerName,
               review.customerEmail,
               review.rating,
