@@ -1,11 +1,11 @@
 import nodemailer from "nodemailer";
 
-// Proton Mail SMTP configuration
-const SMTP_HOST = process.env.PROTON_SMTP_HOST || "smtp.protonmail.ch";
-const SMTP_PORT = parseInt(process.env.PROTON_SMTP_PORT || "587");
-const SMTP_USER = process.env.PROTON_SMTP_USER || "reviews@jasonclark.online";
-const SMTP_PASS = process.env.PROTON_SMTP_PASS || "";
-const FROM_EMAIL = process.env.PROTON_SMTP_USER || "reviews@jasonclark.online";
+// Mailgun SMTP configuration
+const SMTP_HOST = process.env.MAILGUN_SMTP_HOST || "smtp.eu.mailgun.org";
+const SMTP_PORT = parseInt(process.env.MAILGUN_SMTP_PORT || "587");
+const SMTP_USER = process.env.MAILGUN_SMTP_USER || "reviews@jasonclark.online";
+const SMTP_PASS = process.env.MAILGUN_SMTP_PASS || "";
+const FROM_EMAIL = process.env.MAILGUN_FROM_EMAIL || "noreply@jasonclark.online";
 
 // Create transporter
 const transporter = nodemailer.createTransport({
@@ -26,7 +26,7 @@ export interface EmailNotificationPayload {
 }
 
 /**
- * Send email using Proton Mail SMTP
+ * Send email using Mailgun SMTP
  */
 export async function sendEmail(payload: EmailNotificationPayload): Promise<boolean> {
   try {
@@ -34,11 +34,13 @@ export async function sendEmail(payload: EmailNotificationPayload): Promise<bool
     console.log("[Email] Subject:", payload.subject);
 
     if (!SMTP_PASS) {
-      console.error("[Email] ERROR: Proton Mail SMTP password not configured");
+      console.error("[Email] ERROR: Mailgun SMTP password not configured");
       return false;
     }
 
-    console.log("[Email] Sending via Proton Mail SMTP...");
+    console.log("[Email] Sending via Mailgun SMTP...");
+    console.log("[Email] SMTP Host:", SMTP_HOST);
+    console.log("[Email] From address:", FROM_EMAIL);
 
     const info = await transporter.sendMail({
       from: FROM_EMAIL,
