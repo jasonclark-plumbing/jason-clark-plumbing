@@ -46,14 +46,14 @@ export default function AdminLogin() {
       }
 
       // Check for successful result
-      if (!data.result?.success) {
+      if (!data.result?.data?.success) {
         throw new Error("Login failed");
       }
 
       // Store auth token in localStorage as fallback for sandboxed environments
       const token = btoa(JSON.stringify({
-        id: data.result.admin.id,
-        email: data.result.admin.email,
+        id: data.result.data.admin.id,
+        email: data.result.data.admin.email,
         timestamp: Date.now(),
       }));
       localStorage.setItem("adminToken", token);
