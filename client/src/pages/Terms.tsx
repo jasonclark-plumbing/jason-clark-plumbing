@@ -170,7 +170,7 @@ export default function Terms() {
                 Phone: <a href="tel:01480769129" style={{ color: "#C9A84C", textDecoration: "none" }}>01480 769129</a>
               </p>
               <p style={{ margin: 0 }}>
-                Website: <a href="https://www.jasonclark.online" style={{ color: "#C9A84C", textDecoration: "none" }}>www.jasonclark.online</a>
+                Website: <a href="https://jasonclark.online" style={{ color: "#C9A84C", textDecoration: "none" }}>jasonclark.online</a>
               </p>
             </div>
           </section>
