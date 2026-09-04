@@ -7,6 +7,7 @@
 
 import { Phone, MessageCircle, ChevronDown, Mail } from "lucide-react";
 import { trackContactClick } from "@/lib/analytics";
+import { assetUrl } from "@/lib/assetUrl";
 
 export default function HeroSection() {
   const scrollToServices = () => {
@@ -23,7 +24,7 @@ export default function HeroSection() {
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: `url(https://d2xsxph8kpxj0f.cloudfront.net/310519663746061583/JZGjRQ39WvQmto8RQcSvRP/hero-bg-8MwGcWTbR4BtaMFBfPrzmt.webp)`,
+          backgroundImage: `url(${assetUrl("jason-clark-plumbing-hero-background_fbdcc1a6.webp")})`,
         }}
       />
       {/* Dark overlay with gradient */}
@@ -65,7 +66,7 @@ export default function HeroSection() {
           style={{ animationDelay: "0ms" }}
         >
           <img
-            src="https://d2xsxph8kpxj0f.cloudfront.net/310519663746061583/JZGjRQ39WvQmto8RQcSvRP/jcp-logo-badge-Qtyi525UFR9GYq476rkjba.webp"
+            src={assetUrl("jason-clark-plumbing-logo-badge_f4cb2bd2.png")}
             alt="Jason Clark Plumbing"
             className="w-28 h-28 md:w-36 md:h-36 object-contain mx-auto"
             style={{ filter: "drop-shadow(0 0 20px rgba(201,168,76,0.4))" }}

@@ -16,6 +16,7 @@ import {
   ShowerHead,
   PipetteIcon,
 } from "lucide-react";
+import { assetUrl } from "@/lib/assetUrl";
 
 const SERVICES = [
   {
@@ -23,7 +24,7 @@ const SERVICES = [
     title: "General Plumbing Repairs",
     description:
       "From dripping taps and leaking pipes to faulty valves and running cisterns, Jason handles all general plumbing repairs with care and precision.",
-    image: "/manus-storage/general-plumbing-tap_7a3de88d.jpg",
+    image: assetUrl("jason-clark-general-repair_a8f6bc7a.png"),
     featured: false,
   },
   {
@@ -31,7 +32,7 @@ const SERVICES = [
     title: "Radiator Installation & Repair",
     description:
       "New radiator installations, replacements, bleeding, and balancing to keep your home warm and your heating system running at its best.",
-    image: "https://d2xsxph8kpxj0f.cloudfront.net/310519663746061583/JZGjRQ39WvQmto8RQcSvRP/radiator-installation-v3-JZHgWuNViwCGsvdm55oGCm.webp",
+    image: assetUrl("jason-clark-radiator-installation_e9e0ca32.png"),
     featured: false,
   },
   {
@@ -39,7 +40,7 @@ const SERVICES = [
     title: "Bathroom Installations",
     description:
       "Bath, sink, and toilet replacements — professional removal and installation of bathroom fixtures with all associated plumbing connections.",
-    image: "https://d2xsxph8kpxj0f.cloudfront.net/310519663746061583/JZGjRQ39WvQmto8RQcSvRP/bathroom-install-SLCaLJdCJEteJX296cS4tc.webp",
+    image: assetUrl("jason-clark-bathroom-installation_573a4449.png"),
     featured: false,
   },
   {
@@ -47,7 +48,7 @@ const SERVICES = [
     title: "Blocked Sinks & Drains",
     description:
       "Stubborn blockages in sinks, baths, showers, and drains cleared quickly and efficiently.",
-    image: "https://d2xsxph8kpxj0f.cloudfront.net/310519663746061583/JZGjRQ39WvQmto8RQcSvRP/blocked-drains-v3-Thfy36tMvTrpVitkMrgiuW.webp",
+    image: assetUrl("jason-clark-blocked-sink-drain_68fd8452.png"),
     featured: false,
   },
   {
@@ -55,7 +56,7 @@ const SERVICES = [
     title: "Outside Tap Installation",
     description:
       "Professional installation of outdoor taps and garden water points. Perfect for gardens, patios, and utility areas. Frost-proof fittings and proper drainage included.",
-    image: "https://d2xsxph8kpxj0f.cloudfront.net/310519663746061583/JZGjRQ39WvQmto8RQcSvRP/outside-tap-installation-v2-ZwT4BFUrKhvbCAqA8yuLxP.webp",
+    image: assetUrl("jason-clark-outside-tap_e77f957d.png"),
     featured: false,
   },
   {
@@ -63,7 +64,7 @@ const SERVICES = [
     title: "Leak Repair",
     description:
       "Identifying and fixing hidden leaks before they cause damage. Quick and efficient repairs to restore your plumbing to full working order.",
-    image: "https://d2xsxph8kpxj0f.cloudfront.net/310519663746061583/JZGjRQ39WvQmto8RQcSvRP/leak-repair-underground-ZyG62o8AsyozaqjtPUz3tv.webp",
+    image: assetUrl("jason-clark-hidden-leak_0481336c.png"),
     featured: false,
   },
   {
@@ -71,7 +72,7 @@ const SERVICES = [
     title: "Shower Installations",
     description:
       "Mixer and power shower installations, including enclosure fitting and all associated plumbing connections.",
-    image: "https://d2xsxph8kpxj0f.cloudfront.net/310519663746061583/JZGjRQ39WvQmto8RQcSvRP/shower-installation-v2-5jEgp5jXZrhX9q4D7jNibV.webp",
+    image: assetUrl("jason-clark-shower-installation_fbaacfbf.png"),
     featured: false,
   },
   {
@@ -79,7 +80,7 @@ const SERVICES = [
     title: "Pipework & Re-piping",
     description:
       "New pipework runs, re-piping older properties, and upgrading from lead or iron pipes to modern copper or plastic systems.",
-    image: "/manus-storage/pipework-soldering_16662e28.jpg",
+    image: assetUrl("jason-clark-pipework-repiping_df8614f2.png"),
     featured: false,
   },
 ];

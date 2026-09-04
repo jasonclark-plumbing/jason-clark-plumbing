@@ -7,6 +7,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { CheckCircle2 } from "lucide-react";
+import { assetUrl } from "@/lib/assetUrl";
 
 function useInView(threshold = 0.15) {
   const ref = useRef<HTMLDivElement>(null);
@@ -54,7 +55,7 @@ export default function AboutSection() {
               style={{ border: "1px solid rgba(201,168,76,0.3)" }}
             >
               <img
-                src="https://d2xsxph8kpxj0f.cloudfront.net/310519663746061583/JZGjRQ39WvQmto8RQcSvRP/pipe-repair-fRGhh9bjJQAPj7Lw8ajZBo.webp"
+                src={assetUrl("jason-clark-about-van-refined_b1ec6de1.png")}
                 alt="Jason Clark at work"
                 className="w-full object-cover"
                 style={{ height: "480px" }}

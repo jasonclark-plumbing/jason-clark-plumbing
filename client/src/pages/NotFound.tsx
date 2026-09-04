@@ -1,5 +1,6 @@
 import { Home } from "lucide-react";
 import { useLocation } from "wouter";
+import { assetUrl } from "@/lib/assetUrl";
 
 export default function NotFound() {
   const [, setLocation] = useLocation();
@@ -23,7 +24,7 @@ export default function NotFound() {
         {/* Logo/Badge */}
         <div className="flex justify-center mb-6">
           <img
-            src="https://d2xsxph8kpxj0f.cloudfront.net/310519663746061583/JZGjRQ39WvQmto8RQcSvRP/jcp-logo-badge-Qtyi525UFR9GYq476rkjba.webp"
+            src={assetUrl("jason-clark-plumbing-logo-badge_f4cb2bd2.png")}
             alt="Jason Clark Plumbing"
             className="w-20 h-20 object-contain opacity-75"
           />

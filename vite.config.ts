@@ -256,6 +256,16 @@ export default defineConfig({
           }
         },
       },
+      "/public-reviews-api": {
+        target: "https://jasonclark.online",
+        changeOrigin: true,
+        rewrite: (requestPath) => requestPath.replace(/^\/public-reviews-api/, ""),
+      },
+      "/public-assets": {
+        target: "https://jasonclark.online",
+        changeOrigin: true,
+        rewrite: (requestPath) => requestPath.replace(/^\/public-assets/, ""),
+      },
     },
   },
 });

@@ -3,6 +3,8 @@ import { testimonials } from "@/data/testimonials";
 import ReviewSubmitForm from "@/components/ReviewSubmitForm";
 import { Star, ArrowLeft } from "lucide-react";
 
+const PUBLIC_REVIEWS_ORIGIN = import.meta.env.DEV ? "/public-reviews-api" : "";
+
 interface DatabaseReview {
   id: number;
   customerName: string;
@@ -33,7 +35,7 @@ export default function Reviews() {
 
   const fetchReplies = async (reviewId: number) => {
     try {
-      const response = await fetch(`/api/trpc/reviews.getReplies?input=${encodeURIComponent(JSON.stringify({ reviewId }))}`, {
+      const response = await fetch(`${PUBLIC_REVIEWS_ORIGIN}/api/trpc/reviews.getReplies?input=${encodeURIComponent(JSON.stringify({ reviewId }))}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -60,7 +62,7 @@ export default function Reviews() {
       setError("");
 
       // Call tRPC endpoint with proper format
-      const response = await fetch("/api/trpc/reviews.getApproved", {
+      const response = await fetch(`${PUBLIC_REVIEWS_ORIGIN}/api/trpc/reviews.getApproved`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -72,7 +74,11 @@ export default function Reviews() {
       const data = await response.json();
       
       // tRPC returns data in result.data format
-      const reviews = data.result?.data || [];
+      const reviews = Array.isArray(data.result?.data)
+        ? data.result.data
+        : Array.isArray(data.result?.data?.json)
+          ? data.result.data.json
+          : [];
       setApprovedReviews(reviews);
       
       // Fetch replies for each review

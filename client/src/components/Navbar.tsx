@@ -6,6 +6,7 @@
 
 import { useState, useEffect } from "react";
 import { Menu, X, Phone } from "lucide-react";
+import { assetUrl } from "@/lib/assetUrl";
 import { trackContactClick } from "@/lib/analytics";
 
 const NAV_LINKS = [
@@ -58,7 +59,7 @@ export default function Navbar() {
             className="flex items-center gap-3 group"
           >
             <img
-              src="https://d2xsxph8kpxj0f.cloudfront.net/310519663746061583/JZGjRQ39WvQmto8RQcSvRP/jcp-logo-badge-Qtyi525UFR9GYq476rkjba.webp"
+              src={assetUrl("jason-clark-plumbing-logo-badge_f4cb2bd2.png")}
               alt="Jason Clark Plumbing badge"
               className="w-10 h-10 md:w-12 md:h-12 object-contain"
             />

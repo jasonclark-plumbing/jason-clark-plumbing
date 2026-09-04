@@ -6,6 +6,7 @@
 
 import { Phone, MessageCircle, Mail, Facebook } from "lucide-react";
 import { trackContactClick } from "@/lib/analytics";
+import { assetUrl } from "@/lib/assetUrl";
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -22,7 +23,7 @@ export default function Footer() {
           <div className="flex flex-col gap-4">
             <div className="flex items-center gap-3">
               <img
-                src="https://d2xsxph8kpxj0f.cloudfront.net/310519663746061583/JZGjRQ39WvQmto8RQcSvRP/jcp-logo-badge-Qtyi525UFR9GYq476rkjba.webp"
+                src={assetUrl("jason-clark-plumbing-logo-badge_f4cb2bd2.png")}
                 alt="Jason Clark Plumbing"
                 className="w-12 h-12 object-contain"
               />
