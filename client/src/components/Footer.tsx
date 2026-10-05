@@ -60,7 +60,7 @@ export default function Footer() {
                 lineHeight: 1.75,
               }}
             >
-              Reliable local plumbing services in Huntingdon and the surrounding area. City &amp; Guilds qualified, ACIPHE Associate Member, with contact available by phone, WhatsApp or email.
+              Local plumbing services around Huntingdon. City &amp; Guilds qualified, ACIPHE registered and covered by public liability insurance. Contact Jason by phone, WhatsApp or email.
             </p>
             <div className="flex gap-3 mt-1">
               {[

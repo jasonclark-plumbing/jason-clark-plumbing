@@ -25,6 +25,8 @@ const SERVICES = [
     description:
       "From dripping taps and leaking pipes to faulty valves and running cisterns, Jason handles all general plumbing repairs with care and precision.",
     image: assetUrl("jason-clark-general-repair_a8f6bc7a.png"),
+    imageWidth: 1600,
+    imageHeight: 1200,
     featured: false,
   },
   {
@@ -33,38 +35,48 @@ const SERVICES = [
     description:
       "New radiator installations, replacements, bleeding, and balancing to keep your home warm and your heating system running at its best.",
     image: assetUrl("jason-clark-radiator-installation_e9e0ca32.png"),
+    imageWidth: 1600,
+    imageHeight: 1200,
     featured: false,
   },
   {
     icon: <Bath size={22} />,
-    title: "Bathroom Installations",
+    title: "Bathroom Plumbing Installations",
     description:
-      "Bath, sink, and toilet replacements — professional removal and installation of bathroom fixtures with all associated plumbing connections.",
+      "Bath, sink, and toilet replacements with associated plumbing connections. Tiling and carpentry are not included; making good is limited to plumbing work.",
     image: assetUrl("jason-clark-bathroom-installation_573a4449.png"),
+    imageWidth: 445,
+    imageHeight: 449,
     featured: false,
   },
   {
     icon: <AlertTriangle size={22} />,
-    title: "Blocked Sinks & Drains",
+    title: "Blocked Sinks, Baths & Showers",
     description:
-      "Stubborn blockages in sinks, baths, showers, and drains cleared quickly and efficiently.",
+      "Blockages in sinks, baths, and showers cleared as part of general plumbing work.",
     image: assetUrl("jason-clark-blocked-sink-drain_68fd8452.png"),
+    imageWidth: 299,
+    imageHeight: 168,
     featured: false,
   },
   {
     icon: <Thermometer size={22} />,
     title: "Outside Tap Installation",
     description:
-      "Professional installation of outdoor taps and garden water points. Perfect for gardens, patios, and utility areas. Frost-proof fittings and proper drainage included.",
+      "Installation of outdoor taps and garden water points, with associated plumbing connections.",
     image: assetUrl("jason-clark-outside-tap_e77f957d.png"),
+    imageWidth: 447,
+    imageHeight: 447,
     featured: false,
   },
   {
     icon: <Droplets size={22} />,
-    title: "Leak Repair",
+    title: "Accessible Plumbing Leak Repairs",
     description:
-      "Identifying and fixing hidden leaks before they cause damage. Quick and efficient repairs to restore your plumbing to full working order.",
+      "Repairs to accessible leaking pipes and plumbing fittings. Specialist leak detection is not offered.",
     image: assetUrl("jason-clark-hidden-leak_0481336c.png"),
+    imageWidth: 1200,
+    imageHeight: 1600,
     featured: false,
   },
   {
@@ -73,6 +85,8 @@ const SERVICES = [
     description:
       "Mixer and power shower installations, including enclosure fitting and all associated plumbing connections.",
     image: assetUrl("jason-clark-shower-installation_fbaacfbf.png"),
+    imageWidth: 643,
+    imageHeight: 643,
     featured: false,
   },
   {
@@ -81,6 +95,8 @@ const SERVICES = [
     description:
       "New pipework runs, re-piping older properties, and upgrading from lead or iron pipes to modern copper or plastic systems.",
     image: assetUrl("jason-clark-pipework-repiping_df8614f2.png"),
+    imageWidth: 597,
+    imageHeight: 335,
     featured: false,
   },
 ];
@@ -118,6 +134,10 @@ function ServiceCard({ service, index }: { service: typeof SERVICES[0]; index: n
           <img
             src={service.image}
             alt={service.title}
+            width={service.imageWidth}
+            height={service.imageHeight}
+            loading="lazy"
+            decoding="async"
             className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
           />
           <div
@@ -201,7 +221,7 @@ export default function ServicesSection() {
               lineHeight: 1.8,
             }}
           >
-            Jason Clark Plumbing provides dependable plumbing services for homes and properties in Huntingdon and the surrounding area, including emergency call-outs, general repairs, bathroom installations and more. Gas work and boiler servicing are not currently offered.
+            Jason Clark Plumbing provides plumbing services for homes and properties around Huntingdon. Urgent call-outs are available Monday to Friday, 07:00–18:00. Gas work, boiler servicing, and specialist leak detection are not offered.
           </p>
         </div>
 

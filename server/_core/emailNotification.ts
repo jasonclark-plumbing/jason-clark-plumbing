@@ -23,6 +23,7 @@ export interface EmailNotificationPayload {
   subject: string;
   html: string;
   text: string;
+  replyTo?: string;
 }
 
 /**
@@ -48,6 +49,7 @@ export async function sendEmail(payload: EmailNotificationPayload): Promise<bool
       subject: payload.subject,
       html: payload.html,
       text: payload.text,
+      replyTo: payload.replyTo,
     });
 
     console.log("[Email] SUCCESS: Email sent");
@@ -57,6 +59,32 @@ export async function sendEmail(payload: EmailNotificationPayload): Promise<bool
     console.error("[Email] ERROR: Email service exception:", error);
     return false;
   }
+}
+
+export async function sendContactEnquiryNotification(enquiry: {
+  name: string;
+  email: string;
+  phone?: string;
+  message: string;
+}): Promise<boolean> {
+  const phone = enquiry.phone || "Not provided";
+  const html = `
+    <h2>Website plumbing enquiry</h2>
+    <p><strong>Name:</strong> ${escapeHtml(enquiry.name)}</p>
+    <p><strong>Email:</strong> ${escapeHtml(enquiry.email)}</p>
+    <p><strong>Phone:</strong> ${escapeHtml(phone)}</p>
+    <p><strong>Message:</strong></p>
+    <p>${escapeHtml(enquiry.message).replace(/\n/g, "<br>")}</p>
+  `;
+  const text = `Website plumbing enquiry\n\nName: ${enquiry.name}\nEmail: ${enquiry.email}\nPhone: ${phone}\n\nMessage:\n${enquiry.message}`;
+
+  return sendEmail({
+    to: "plumbing@jasonclark.online",
+    replyTo: enquiry.email,
+    subject: `Website enquiry from ${enquiry.name}`,
+    html,
+    text,
+  });
 }
 
 /**

@@ -1,6 +1,6 @@
 /*
  * DESIGN: Heritage British Trade Signage
- * Gold-bordered callout box highlighting 12-month guarantee on work + manufacturer guarantee on parts
+ * Gold-bordered callout box explaining workmanship and manufacturer guarantees.
  */
 
 import { CheckCircle } from "lucide-react";
@@ -41,15 +41,14 @@ export default function GuaranteeCallout() {
             {[
               {
                 icon: <CheckCircle size={24} />,
-                title: "12 Months on Work",
-                description:
-                  "All workmanship is guaranteed for 12 months from completion against defective work.",
+                title: "Workmanship Guarantee",
+                description: "Jason's workmanship is guaranteed.",
               },
               {
                 icon: <CheckCircle size={24} />,
                 title: "Manufacturer's Guarantee on Parts",
                 description:
-                  "All parts supplied come with the full manufacturer's warranty and protection.",
+                  "Manufacturer guarantees and terms apply to supplied parts and vary by product.",
               },
             ].map((item, idx) => (
               <div key={idx} className="flex gap-3">

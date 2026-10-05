@@ -142,12 +142,22 @@ export async function getReviewById(reviewId: number): Promise<Review | null> {
   }
 }
 
-export async function getApprovedReviews(): Promise<Review[]> {
+export async function getApprovedReviews(): Promise<Pick<Review, "id" | "customerName" | "rating" | "text" | "submittedAt">[]> {
   const db = await getDb();
   if (!db) return [];
 
   try {
-    return await db.select().from(reviews).where(eq(reviews.status, "approved")).orderBy(reviews.submittedAt);
+    return await db
+      .select({
+        id: reviews.id,
+        customerName: reviews.customerName,
+        rating: reviews.rating,
+        text: reviews.text,
+        submittedAt: reviews.submittedAt,
+      })
+      .from(reviews)
+      .where(eq(reviews.status, "approved"))
+      .orderBy(reviews.submittedAt);
   } catch (error) {
     console.error("[Database] Failed to get approved reviews:", error);
     return [];

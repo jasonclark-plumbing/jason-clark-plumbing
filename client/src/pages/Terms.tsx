@@ -51,14 +51,14 @@ export default function Terms() {
               <li>General plumbing repairs</li>
               <li>Radiator installation and repair</li>
               <li>Bathroom fixture replacement</li>
-              <li>Blocked drain clearance</li>
-              <li>Leak detection and repair</li>
+              <li>Blocked sink, bath, and shower clearance</li>
+              <li>Accessible plumbing leak repairs (specialist leak detection is not offered)</li>
               <li>Outside tap installation</li>
               <li>Shower installation</li>
               <li>Pipework and re-piping</li>
             </ul>
             <p style={{ color: "#9A8A6A", fontSize: "0.95rem" }}>
-              <strong>Note:</strong> We do not offer emergency after-hours service. Business hours are 0700–1800, Monday to Friday.
+              <strong>Note:</strong> Urgent call-outs are available during business hours only: Monday to Friday, 07:00–18:00. We do not offer out-of-hours emergency service. Gas work and boiler servicing are not offered.
             </p>
           </section>
 
@@ -85,10 +85,7 @@ export default function Terms() {
               5. Warranty & Guarantee
             </h2>
             <p>
-              All work carried out by Jason Clark Plumbing is guaranteed for <strong>12 months from completion</strong> against defective workmanship. Parts supplied are covered by the manufacturers' warranty.
-            </p>
-            <p>
-              This guarantee does not cover damage caused by misuse, accident, or failure to follow maintenance instructions.
+              Jason Clark Plumbing guarantees its workmanship. Supplied parts are subject to the manufacturer's own guarantee and terms.
             </p>
           </section>
 

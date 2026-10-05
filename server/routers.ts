@@ -2,7 +2,7 @@ import { z } from "zod";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { TRPCError } from "@trpc/server";
 import bcrypt from "bcryptjs";
-import { sendNewReviewNotification, sendReviewApprovedNotification, sendReviewRejectedNotification } from "./_core/emailNotification";
+import { sendContactEnquiryNotification, sendNewReviewNotification, sendReviewApprovedNotification, sendReviewRejectedNotification } from "./_core/emailNotification";
 import { verifyCaptcha } from "./captcha";
 import { checkReviewRateLimit } from "./_core/rateLimit";
 import {
@@ -22,6 +22,29 @@ import {
 } from "./db";
 
 export const appRouter = router({
+  contact: router({
+    submit: publicProcedure
+      .input(
+        z.object({
+          name: z.string().trim().min(1).max(120),
+          email: z.string().trim().email().max(254),
+          phone: z.string().trim().max(40).optional(),
+          message: z.string().trim().min(1).max(5000),
+        })
+      )
+      .mutation(async ({ input }) => {
+        const sent = await sendContactEnquiryNotification(input);
+        if (!sent) {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "We couldn't send your enquiry. Please call or message us instead.",
+          });
+        }
+
+        return { success: true };
+      }),
+  }),
+
   // Public: Submit a review
   reviews: router({
     submit: publicProcedure
@@ -37,10 +60,7 @@ export const appRouter = router({
       .mutation(async ({ input, ctx }) => {
         try {
           // Get client IP address
-          const clientIp =
-            (ctx.req.headers["x-forwarded-for"] as string)?.split(",")[0].trim() ||
-            ctx.req.ip ||
-            "unknown";
+          const clientIp = ctx.req.ip || "unknown";
 
           // Check rate limit
           const { allowed, remaining } = checkReviewRateLimit(clientIp);
@@ -92,6 +112,9 @@ export const appRouter = router({
           return { success: true, reviewId: review.id };
         } catch (error) {
           console.error("[tRPC] Review submission error:", error);
+          if (error instanceof TRPCError) {
+            throw error;
+          }
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
             message: "Failed to submit review",
@@ -400,10 +423,7 @@ export const appRouter = router({
       )
       .mutation(async ({ input, ctx }) => {
         try {
-          console.log("[Login] Attempting login for:", input.email);
           const admin = await getAdminByEmail(input.email);
-          console.log("[Login] Admin found:", admin ? `ID ${admin.id}` : "not found");
-
           if (!admin) {
             throw new TRPCError({
               code: "UNAUTHORIZED",
@@ -411,19 +431,7 @@ export const appRouter = router({
             });
           }
 
-          console.log("[Login] Comparing password...");
-          console.log("[Login] Input password length:", input.password.length);
-          console.log("[Login] Hash length:", admin.passwordHash.length);
-          console.log("[Login] Hash starts with:", admin.passwordHash.substring(0, 10));
           const isPasswordValid = await bcrypt.compare(input.password, admin.passwordHash);
-          console.log("[Login] Password valid:", isPasswordValid);
-          if (!isPasswordValid) {
-            console.log("[Login] Password mismatch - trying with trimmed password");
-            const trimmedPassword = input.password.trim();
-            const isPasswordValidTrimmed = await bcrypt.compare(trimmedPassword, admin.passwordHash);
-            console.log("[Login] Trimmed password valid:", isPasswordValidTrimmed);
-          }
-
           if (!isPasswordValid) {
             throw new TRPCError({
               code: "UNAUTHORIZED",
@@ -455,7 +463,7 @@ export const appRouter = router({
                 });
               }
             });
-          })
+          });
         } catch (error) {
           console.error("[tRPC] Admin login error:", error);
           if (error instanceof TRPCError) throw error;

@@ -32,8 +32,8 @@ describe("Rate Limiting", () => {
   });
 
   it("should track different IPs independently", () => {
-    const ip1 = "192.168.1.1";
-    const ip2 = "192.168.1.2";
+    const ip1 = "192.168.2.1";
+    const ip2 = "192.168.2.2";
 
     // Submit 5 times from ip1
     for (let i = 0; i < 5; i++) {

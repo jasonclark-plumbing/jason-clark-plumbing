@@ -250,9 +250,22 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
     .animate-fade-up,
-    .gold-shimmer-text {
-      animation: none;
+    .gold-shimmer-text,
+    .transition-transform {
+      animation: none !important;
+      transition: none !important;
+    }
+
+    [style*="translateX("],
+    [style*="translateY("] {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
     }
   }
 }

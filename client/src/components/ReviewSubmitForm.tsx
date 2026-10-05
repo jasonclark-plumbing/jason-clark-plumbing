@@ -9,6 +9,7 @@ export default function ReviewSubmitForm() {
     rating: 5,
     text: "",
   });
+    const captchaSiteKey = import.meta.env.VITE_HCAPTCHA_SITE_KEY;
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -85,10 +86,16 @@ export default function ReviewSubmitForm() {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
+          {!captchaSiteKey && (
+            <p role="alert" className="border border-red-500/40 bg-red-500/10 p-4 text-sm text-red-300">
+              Review submissions are temporarily unavailable. Please contact Jason directly.
+            </p>
+          )}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-gold text-sm font-semibold mb-2">Your Name *</label>
+            <label htmlFor="review-customer-name" className="block text-gold text-sm font-semibold mb-2">Your Name *</label>
             <input
+              id="review-customer-name"
               type="text"
               name="customerName"
               value={form.customerName}
@@ -99,8 +106,9 @@ export default function ReviewSubmitForm() {
             />
           </div>
           <div>
-            <label className="block text-gold text-sm font-semibold mb-2">Email Address *</label>
+            <label htmlFor="review-customer-email" className="block text-gold text-sm font-semibold mb-2">Email Address *</label>
             <input
+              id="review-customer-email"
               type="email"
               name="customerEmail"
               value={form.customerEmail}
@@ -113,14 +121,16 @@ export default function ReviewSubmitForm() {
         </div>
 
         <div>
-          <label className="block text-gold text-sm font-semibold mb-2">Rating *</label>
-          <div className="flex gap-2">
+          <div className="block text-gold text-sm font-semibold mb-2" id="review-rating-label">Rating *</div>
+          <div className="flex gap-2" role="group" aria-labelledby="review-rating-label">
             {[1, 2, 3, 4, 5].map((star) => (
               <button
                 key={star}
                 type="button"
                 onClick={() => setForm((prev) => ({ ...prev, rating: star }))}
-                className="transition"
+                className="transition focus-visible:ring-2 focus-visible:ring-[#E8C96B] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+                aria-label={`Rate ${star} ${star === 1 ? "star" : "stars"}`}
+                aria-pressed={form.rating === star}
               >
                 <Star
                   size={28}
@@ -132,8 +142,9 @@ export default function ReviewSubmitForm() {
         </div>
 
         <div>
-          <label className="block text-gold text-sm font-semibold mb-2">Your Review *</label>
+          <label htmlFor="review-text" className="block text-gold text-sm font-semibold mb-2">Your Review *</label>
           <textarea
+            id="review-text"
             name="text"
             value={form.text}
             onChange={handleChange}
@@ -145,11 +156,11 @@ export default function ReviewSubmitForm() {
         </div>
 
         {/* hCaptcha Widget */}
-        {import.meta.env.VITE_HCAPTCHA_SITE_KEY && (
+          {captchaSiteKey && (
           <div className="flex justify-center py-4">
             <HCaptcha
               ref={captchaRef}
-              sitekey={import.meta.env.VITE_HCAPTCHA_SITE_KEY}
+                sitekey={captchaSiteKey}
               theme="dark"
             />
           </div>

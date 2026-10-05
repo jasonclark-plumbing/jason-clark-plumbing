@@ -6,6 +6,7 @@ import Reviews from "@/pages/Reviews";
 import Privacy from "@/pages/Privacy";
 import Terms from "@/pages/Terms";
 import Contact from "@/pages/Contact";
+import AnalyticsConsent from "@/components/AnalyticsConsent";
 import AdminLogin from "@/pages/AdminLogin";
 import AdminDashboard from "@/pages/AdminDashboard";
 import { Route, Switch, useLocation } from "wouter";
@@ -15,7 +16,7 @@ import Home from "./pages/Home";
 
 const DEFAULT_TITLE = "Jason Clark Plumbing | Reliable Local Plumbing in Huntingdon";
 const DEFAULT_DESCRIPTION =
-  "Reliable local plumbing services in Huntingdon and surrounding areas. Call 01480 769129 or WhatsApp 07767 910713.";
+  "City & Guilds qualified plumbing services around Huntingdon and selected locations within about 50 minutes. Call 01480 769129 or WhatsApp 07767 910713.";
 const CANONICAL_DOMAIN = "https://jasonclark.online";
 
 const ROUTE_META: Record<string, { title: string; description: string; robots: string }> = {
@@ -51,7 +52,7 @@ const ROUTE_META: Record<string, { title: string; description: string; robots: s
   },
   "/contact": {
     title: "Contact Us | Jason Clark Plumbing",
-    description: "Get in touch with Jason Clark Plumbing. Call 01480 769129 or fill out our contact form for a quick response.",
+    description: "Contact Jason Clark Plumbing for a free quote. Call 01480 769129 or WhatsApp 07767 910713 during Monday to Friday business hours.",
     robots: "index, follow",
   },
   "/404": {
@@ -148,6 +149,7 @@ function App() {
       <ThemeProvider defaultTheme="dark">
         <TooltipProvider>
           <Toaster />
+          <AnalyticsConsent />
           <SeoHead />
           <Router />
         </TooltipProvider>

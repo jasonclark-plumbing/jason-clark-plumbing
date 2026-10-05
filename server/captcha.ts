@@ -3,8 +3,8 @@
  */
 export async function verifyCaptcha(token: string): Promise<boolean> {
   try {
-    // Allow test tokens in development
-    if (token === "test-token" || token === "dev-token") {
+    // Test tokens must never bypass verification in production.
+    if (process.env.NODE_ENV !== "production" && (token === "test-token" || token === "dev-token")) {
       console.log("[CAPTCHA] Test token accepted (development mode)");
       return true;
     }

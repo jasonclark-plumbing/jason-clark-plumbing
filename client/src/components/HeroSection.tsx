@@ -68,6 +68,8 @@ export default function HeroSection() {
           <img
             src={assetUrl("jason-clark-plumbing-logo-badge_f4cb2bd2.png")}
             alt="Jason Clark Plumbing"
+            width={1920}
+            height={1920}
             className="w-28 h-28 md:w-36 md:h-36 object-contain mx-auto"
             style={{ filter: "drop-shadow(0 0 20px rgba(201,168,76,0.4))" }}
           />
@@ -78,7 +80,7 @@ export default function HeroSection() {
           className="section-label animate-fade-up"
           style={{ animationDelay: "80ms" }}
         >
-          — Serving Huntingdon & Surrounding Areas —
+          — Serving Selected Locations Within About 50 Minutes of Huntingdon —
         </div>
 
         {/* Main heading */}
@@ -134,7 +136,7 @@ export default function HeroSection() {
                 letterSpacing: "0.02em",
               }}
             >
-              City &amp; Guilds Qualified &nbsp;·&nbsp; ACIPHE Associate Member<br />
+              City &amp; Guilds Qualified &nbsp;·&nbsp; ACIPHE Registered<br />
               <span style={{ fontSize: "0.875rem", color: "#9A8A6A" }}>Plumbing services in Huntingdon and surrounding areas</span>
             </p>
         </div>

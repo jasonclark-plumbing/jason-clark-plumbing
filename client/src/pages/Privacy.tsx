@@ -75,7 +75,7 @@ export default function Privacy() {
               Cookies
             </h3>
             <p>
-              We may use cookies to improve website performance and user experience. You can disable cookies in your browser settings.
+              Google Analytics is optional and is only loaded after you accept analytics in the privacy prompt. Your choice is stored in this browser and can be changed using the Privacy settings button.
             </p>
           </section>
 

@@ -65,25 +65,37 @@ export default function ContactSection() {
 
   const [form, setForm] = useState({ name: "", phone: "", email: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Compose mailto link with form data
-    const subject = encodeURIComponent(`Website Enquiry from ${form.name}`);
-    const body = encodeURIComponent(
-      `Name: ${form.name}\nPhone: ${form.phone}\nEmail: ${form.email}\n\nMessage:\n${form.message}`
-    );
-    trackEvent("contact_form_mailto_submit", { placement: "contact_section" });
-    trackEvent("generate_lead", { channel: "mailto", placement: "contact_section" });
-    // Allow analytics dispatch to queue before handing off to mail client.
-    setTimeout(() => {
-      window.location.href = `mailto:plumbing@jasonclark.online?subject=${subject}&body=${body}`;
-    }, 150);
-    setSubmitted(true);
+    setSubmitting(true);
+    setSubmitError("");
+
+    try {
+      const response = await fetch("/api/trpc/contact.submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const result = await response.json();
+      if (!response.ok || result.error) {
+        throw new Error(result.error?.json?.message || "Please try again or contact Jason by phone or WhatsApp.");
+      }
+
+      trackEvent("generate_lead", { channel: "form", placement: "contact_section" });
+      setSubmitted(true);
+      setForm({ name: "", phone: "", email: "", message: "" });
+    } catch (error) {
+      setSubmitError(error instanceof Error ? error.message : "Please try again or contact Jason by phone or WhatsApp.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const inputStyle: React.CSSProperties = {
@@ -135,10 +147,10 @@ export default function ContactSection() {
               lineHeight: 1.8,
             }}
           >
-            Whether you have an emergency or simply want to discuss a project,
-            Jason is happy to help. Get in touch for a free, no-obligation quote.
+            Need urgent plumbing help during business hours or planning a job?
+            Contact Jason for a free quote.
             <span className="mt-3 block text-[#F0EAD6]">
-              Fast response for urgent plumbing issues and planned jobs alike.
+              Urgent call-outs are available Monday to Friday, 07:00–18:00. No out-of-hours emergency service.
             </span>
           </p>
         </div>
@@ -248,7 +260,7 @@ export default function ContactSection() {
             {/* Credential badges */}
             <div className="mt-4 pt-6" style={{ borderTop: "1px solid rgba(201,168,76,0.15)" }}>
               <div className="flex flex-wrap gap-3">
-                {["City & Guilds Qualified", "ACIPHE Associate Member", "Fully Insured"].map((badge) => (
+                {["City & Guilds Qualified", "ACIPHE Registered", "Public Liability Insured"].map((badge) => (
                   <span
                     key={badge}
                     className="px-3 py-1.5 text-xs"
@@ -318,7 +330,7 @@ export default function ContactSection() {
                     color: "#9A8A6A",
                   }}
                 >
-                  Your email client should have opened. Jason will be in touch shortly.
+                  Your enquiry has been sent. Jason will respond during business hours.
                 </p>
                 <button
                   className="btn-ghost-gold mt-2 text-xs"
@@ -329,6 +341,7 @@ export default function ContactSection() {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                {submitError && <p role="alert" className="text-sm text-red-300">{submitError}</p>}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label
@@ -446,8 +459,8 @@ export default function ContactSection() {
                     placeholder="Please describe the work you need done..."
                   />
                 </div>
-                <button type="submit" className="btn-gold mt-2">
-                  Send Enquiry
+                <button type="submit" className="btn-gold mt-2" disabled={submitting}>
+                  {submitting ? "Sending..." : "Send Enquiry"}
                 </button>
                 <p
                   style={{

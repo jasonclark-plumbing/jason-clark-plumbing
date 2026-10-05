@@ -3,10 +3,10 @@ import { renderToStaticMarkup } from "react-dom/server";
 import ContactSection from "../ContactSection";
 
 describe("ContactSection", () => {
-  it("highlights a rapid response message for urgent enquiries", () => {
+  it("makes emergency availability clear", () => {
     const html = renderToStaticMarkup(<ContactSection />);
 
-    expect(html).toContain("Fast response");
-    expect(html).toContain("urgent plumbing issues");
+    expect(html).toContain("Monday to Friday, 07:00–18:00");
+    expect(html).toContain("No out-of-hours emergency service");
   });
 });

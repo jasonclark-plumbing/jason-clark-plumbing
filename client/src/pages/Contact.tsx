@@ -11,6 +11,7 @@ export default function Contact() {
   });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -23,17 +24,23 @@ export default function Contact() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setSubmitError("");
 
     try {
-      // You can integrate with your backend here if needed
-      // For now, just show success message
+      const response = await fetch("/api/trpc/contact.submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      const result = await response.json();
+      if (!response.ok || result.error) {
+        throw new Error(result.error?.json?.message || "Please try again or contact Jason by phone or WhatsApp.");
+      }
+
       setSubmitted(true);
       setFormData({ name: "", email: "", phone: "", message: "" });
-      
-      // Reset success message after 5 seconds
-      setTimeout(() => setSubmitted(false), 5000);
     } catch (error) {
-      console.error("Error submitting form:", error);
+      setSubmitError(error instanceof Error ? error.message : "Please try again or contact Jason by phone or WhatsApp.");
     } finally {
       setLoading(false);
     }
@@ -72,7 +79,7 @@ export default function Contact() {
                 <Phone className="text-gold" size={24} />
                 <h3 className="text-xl font-semibold text-gold">Phone</h3>
               </div>
-              <p className="text-cream/80 mb-2">Call us anytime for urgent issues</p>
+              <p className="text-cream/80 mb-2">Call Monday to Friday, 07:00–18:00 for urgent plumbing issues</p>
               <a href="tel:01480769129" className="text-gold hover:text-gold/80 transition-colors font-semibold">
                 01480 769129
               </a>
@@ -106,7 +113,7 @@ export default function Contact() {
                 <h3 className="text-xl font-semibold text-gold">Service Area</h3>
               </div>
               <p className="text-cream/80">
-                Huntingdon and surrounding areas in Cambridgeshire
+                Selected locations within approximately a 50-minute drive of Huntingdon
               </p>
             </div>
           </div>
@@ -122,6 +129,7 @@ export default function Contact() {
             )}
 
             <form onSubmit={handleSubmit} className="space-y-4">
+              {submitError && <p role="alert" className="text-sm text-red-300">{submitError}</p>}
               <div>
                 <label htmlFor="name" className="block text-sm font-semibold text-gold mb-2">
                   Name *
@@ -204,7 +212,7 @@ export default function Contact() {
         <div className="mt-16 text-center border-t-2 border-gold/30 pt-12">
           <h2 className="text-2xl font-playfair text-gold mb-6">Need Help Right Away?</h2>
           <p className="text-cream/80 mb-8 max-w-2xl mx-auto">
-            For emergency plumbing issues, call us directly at 01480 769129. We offer rapid response times for urgent repairs.
+            For urgent plumbing issues during business hours, call 01480 769129. We do not offer out-of-hours emergency service.
           </p>
           <a
             href="tel:01480769129"

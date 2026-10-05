@@ -8,10 +8,8 @@ const PUBLIC_REVIEWS_ORIGIN = import.meta.env.DEV ? "/public-reviews-api" : "";
 interface DatabaseReview {
   id: number;
   customerName: string;
-  customerEmail: string;
   rating: number;
   text: string;
-  status: "pending" | "approved" | "rejected";
   submittedAt: string;
 }
 

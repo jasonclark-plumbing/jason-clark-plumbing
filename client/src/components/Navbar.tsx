@@ -130,9 +130,11 @@ export default function Navbar() {
 
           {/* Mobile menu toggle */}
           <button
-            className="lg:hidden p-2 text-[#C9A84C]"
+            className="lg:hidden min-h-11 min-w-11 p-2 text-[#C9A84C]"
             onClick={() => setIsOpen(!isOpen)}
             aria-label="Toggle menu"
+            aria-expanded={isOpen}
+            aria-controls="mobile-navigation"
           >
             {isOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
@@ -141,7 +143,10 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       <div
+        id="mobile-navigation"
         className="lg:hidden overflow-hidden transition-all duration-300"
+        aria-hidden={!isOpen}
+        inert={!isOpen}
         style={{
           maxHeight: isOpen ? "400px" : "0",
           borderTop: isOpen ? "1px solid rgba(201, 168, 76, 0.2)" : "none",

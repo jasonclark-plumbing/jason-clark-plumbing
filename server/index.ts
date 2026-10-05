@@ -4,6 +4,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import fs from "fs";
 import session from "express-session";
+import rateLimit from "express-rate-limit";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { appRouter } from "./routers";
 import { createContext } from "./_core/trpc";
@@ -14,7 +15,7 @@ const __dirname = path.dirname(__filename);
 const CANONICAL_DOMAIN = "https://jasonclark.online";
 const DEFAULT_TITLE = "Jason Clark Plumbing | Reliable Local Plumbing in Huntingdon";
 const DEFAULT_DESCRIPTION =
-  "Reliable local plumbing services in Huntingdon and surrounding areas. Call 01480 769129 or WhatsApp 07767 910713.";
+  "City & Guilds qualified plumbing services around Huntingdon and selected locations within about 50 minutes. Call 01480 769129 or WhatsApp 07767 910713.";
 
 const ROUTE_META: Record<string, { title: string; description: string; robots: string }> = {
   "/": {
@@ -29,7 +30,7 @@ const ROUTE_META: Record<string, { title: string; description: string; robots: s
   },
   "/contact": {
     title: "Contact Us | Jason Clark Plumbing",
-    description: "Get in touch with Jason Clark Plumbing. Call 01480 769129 or fill out our contact form for a quick response.",
+    description: "Contact Jason Clark Plumbing for a free quote. Call 01480 769129 or WhatsApp 07767 910713 during Monday to Friday business hours.",
     robots: "index, follow",
   },
   "/privacy": {
@@ -83,21 +84,41 @@ function renderIndexHtml(template: string, pathname: string) {
 async function startServer() {
   const app = express();
   const server = createServer(app);
+  const isProduction = process.env.NODE_ENV === "production";
+  const sessionSecret = process.env.JWT_SECRET;
+
+  if (isProduction && (!sessionSecret || sessionSecret.length < 32)) {
+    throw new Error("JWT_SECRET must be configured with at least 32 characters in production");
+  }
+
+  if (isProduction) {
+    app.set("trust proxy", 1);
+  }
 
   // Middleware
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 
+  app.use(
+    "/api/trpc/contact.submit",
+    rateLimit({
+      windowMs: 15 * 60 * 1000,
+      limit: 5,
+      standardHeaders: true,
+      legacyHeaders: false,
+    })
+  );
+
   // Session middleware
   app.use(
     session({
-      secret: process.env.JWT_SECRET || "your-secret-key",
+      secret: sessionSecret || "local-development-session-secret",
       resave: false,
       saveUninitialized: false,
       cookie: {
-        secure: false, // Use false for development (HTTP)
+        secure: isProduction,
         httpOnly: true,
-        sameSite: false, // Disable SameSite for development
+        sameSite: "lax",
         maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
       },
     })

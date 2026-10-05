@@ -27,8 +27,8 @@ function useInView(threshold = 0.15) {
 
 const CREDENTIALS = [
   "City & Guilds Qualified",
-  "ACIPHE Associate Member",
-  "Fully Insured",
+  "ACIPHE Registered",
+  "Public Liability Insured",
   "Free Quotes Available",
 ];
 
@@ -58,6 +58,8 @@ export default function AboutSection() {
                 src={assetUrl("jason-clark-about-van-refined_b1ec6de1.png")}
                 alt="Jason Clark at work"
                 className="w-full object-cover"
+                loading="lazy"
+                decoding="async"
                 style={{ height: "480px" }}
               />
               <div
@@ -107,7 +109,7 @@ export default function AboutSection() {
                 marginBottom: "1.25rem",
               }}
             >
-              Jason Clark is a City &amp; Guilds qualified plumber serving Huntingdon and nearby areas with dependable plumbing work for homes and properties. As an ACIPHE Associate Member, Jason brings professional standards and a careful approach to every job, from a simple tap repair to a full bathroom installation.
+              Jason Clark is a City &amp; Guilds qualified plumber and ACIPHE registered, providing plumbing services for homes and properties around Huntingdon.
             </p>
             <p
               style={{

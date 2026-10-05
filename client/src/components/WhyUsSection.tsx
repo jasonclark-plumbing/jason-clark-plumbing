@@ -26,18 +26,18 @@ function useInView(threshold = 0.15) {
 const REASONS = [
   {
     icon: <Shield size={26} />,
-    title: "Qualified & Accredited",
-    body: "City & Guilds qualified with ACIPHE associate membership. You can be confident that all work meets current regulations and industry best practice.",
+    title: "Qualified & Registered",
+    body: "City & Guilds qualified and ACIPHE registered.",
   },
   {
     icon: <Clock size={26} />,
     title: "Prompt & Reliable",
-    body: "Jason respects your time. He arrives when he says he will, keeps you informed throughout, and completes work to schedule.",
+    body: "Jason responds quickly to enquiries. Call or message during business hours to discuss urgent plumbing issues or planned work.",
   },
   {
     icon: <MapPin size={26} />,
     title: "Truly Local",
-    body: "Based in the local area, Jason understands the community he serves. Fast response times and a genuine commitment to local customers.",
+    body: "Based around Huntingdon, Jason serves selected locations within approximately a 50-minute drive.",
   },
   {
     icon: <Star size={26} />,
@@ -52,7 +52,7 @@ const REASONS = [
   {
     icon: <Banknote size={26} />,
     title: "Honest, Fair Pricing",
-    body: "Transparent quotes with no hidden charges. Free estimates available, and competitive rates that reflect the quality of work provided.",
+    body: "Free quotes are available. Contact Jason to discuss the plumbing work you need.",
   },
 ];
 
@@ -144,8 +144,8 @@ export default function WhyUsSection() {
               lineHeight: 1.8,
             }}
           >
-            Choosing the right plumber matters. Here is why hundreds of local customers
-            trust Jason Clark Plumbing for their homes and businesses.
+            Choosing the right plumber matters. Here is what Jason Clark Plumbing offers
+            to local homes and properties.
           </p>
         </div>
 
